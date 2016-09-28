@@ -1,0 +1,61 @@
+build: {
+  check-missing: [ false, false ]
+  cross-version: [ disabled, standard ]
+  space.from: [ sbt, sbtplugins ]
+  space.to: sbt
+  sbt-version: "0.13.12"
+  extraction-version: "2.10.7"
+  sbt-java-options: "-Dsbt.override.build.repos=true"
+
+  projects:[
+
+  {
+    name:   sbt
+    uri:    "https://github.com/cunei/sbt.git#1.0.x-toni1"
+    extra.run-tests: false
+    extra.exclude: bundledLauncherProj
+  }
+
+  {
+    name:   zinc
+    uri:    "https://github.com/cunei/zinc.git#1.0-toni1"
+    extra.run-tests: false
+  }
+
+  {
+    name:   sbt-io
+    uri:    "https://github.com/sbt/io.git#1.0"
+    extra.run-tests: false // checks build.properties, which dbuild deletes
+  }
+  {
+    name:   sbt-util
+    uri:    "https://github.com/sbt/util.git#1.0"
+    //
+    // The update Context -> blackbox.Context breaks 1.0, see:
+    // https://github.com/sbt/util/compare/v0.1.0-M13...fba4e78#diff-fb4a73fde098285ebe9128a2267f85bbL17
+    //
+    // currently sbt works when using:
+    //    uri:    "https://github.com/sbt/util.git#v0.1.0-M13"
+    //
+  }
+  {
+    name:   sbt-librarymanagement
+    uri:    "https://github.com/cunei/librarymanagement.git#1.0-toni1"
+  }
+  {
+    name:   "sbt-launcher"
+    system: ivy
+    uri:    "ivy:org.scala-sbt#launcher;1.0.0"
+//  uri:    "https://github.com/sbt/launcher.git#1.0"
+  }
+  {
+    name:   "sbt-remote-control"
+    uri:    "https://github.com/sbt/sbt-remote-control.git#master"
+    extra.exclude: root
+  }
+  {
+    name:   "sbt-website"
+    uri:    "https://github.com/sbt/website.git#1.0.x"
+  }
+
+]}
