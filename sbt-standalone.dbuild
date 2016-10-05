@@ -25,7 +25,6 @@ build: {
   {
     name:   sbt-io
     uri:    "https://github.com/sbt/io.git#1.0"
-    extra.run-tests: false // checks build.properties, which dbuild deletes
   }
   {
     name:   sbt-util
