@@ -11,7 +11,7 @@ build: {
 
   {
     name:   sbt
-    uri:    "https://github.com/cunei/sbt.git#1.0.x-toni1"
+    uri:    "https://github.com/sbt/sbt.git#1.0.x"
     extra.run-tests: false
     extra.exclude: bundledLauncherProj
   }
