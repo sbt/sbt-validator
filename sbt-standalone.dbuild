@@ -18,7 +18,7 @@ build: {
 
   {
     name:   zinc
-    uri:    "https://github.com/cunei/zinc.git#1.0-toni1"
+    uri:    "https://github.com/sbt/zinc.git#1.0"
     extra.run-tests: false
   }
 
@@ -39,7 +39,7 @@ build: {
   }
   {
     name:   sbt-librarymanagement
-    uri:    "https://github.com/cunei/librarymanagement.git#1.0-toni1"
+    uri:    "https://github.com/sbt/librarymanagement.git#1.0"
   }
   {
     name:   "sbt-launcher"
