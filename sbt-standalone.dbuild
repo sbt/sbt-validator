@@ -33,13 +33,6 @@ build: {
     name:   sbt-util
     uri:    "https://github.com/sbt/util.git#1.0"
     set-version-suffix: "nightly-${TIMESTAMP}"
-    //
-    // The update Context -> blackbox.Context breaks 1.0, see:
-    // https://github.com/sbt/util/compare/v0.1.0-M13...fba4e78#diff-fb4a73fde098285ebe9128a2267f85bbL17
-    //
-    // currently sbt works when using:
-    //    uri:    "https://github.com/sbt/util.git#v0.1.0-M13"
-    //
   }
   {
     name:   sbt-librarymanagement
