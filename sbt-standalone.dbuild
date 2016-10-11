@@ -48,11 +48,6 @@ build: {
 //  uri:    "https://github.com/sbt/launcher.git#1.0"
   }
   {
-    name:   "sbt-remote-control"
-    uri:    "https://github.com/sbt/sbt-remote-control.git#master"
-    extra.exclude: root
-  }
-  {
     name:   "sbt-website"
     uri:    "https://github.com/sbt/website.git#1.0.x"
   }
