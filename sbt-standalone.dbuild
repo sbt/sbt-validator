@@ -12,6 +12,7 @@ build: {
   {
     name:   sbt
     uri:    "https://github.com/sbt/sbt.git#1.0.x"
+    set-version-suffix: "nightly-${TIMESTAMP}"
     extra.run-tests: false
     extra.exclude: bundledLauncherProj
   }
@@ -19,16 +20,19 @@ build: {
   {
     name:   zinc
     uri:    "https://github.com/sbt/zinc.git#1.0"
+    set-version-suffix: "nightly-${TIMESTAMP}"
     extra.run-tests: false
   }
 
   {
     name:   sbt-io
     uri:    "https://github.com/sbt/io.git#1.0"
+    set-version-suffix: "nightly-${TIMESTAMP}"
   }
   {
     name:   sbt-util
     uri:    "https://github.com/sbt/util.git#1.0"
+    set-version-suffix: "nightly-${TIMESTAMP}"
     //
     // The update Context -> blackbox.Context breaks 1.0, see:
     // https://github.com/sbt/util/compare/v0.1.0-M13...fba4e78#diff-fb4a73fde098285ebe9128a2267f85bbL17
@@ -40,16 +44,19 @@ build: {
   {
     name:   sbt-librarymanagement
     uri:    "https://github.com/sbt/librarymanagement.git#1.0"
+    set-version-suffix: "nightly-${TIMESTAMP}"
   }
   {
     name:   "sbt-launcher"
     system: ivy
     uri:    "ivy:org.scala-sbt#launcher;1.0.0"
+    set-version-suffix: "nightly-${TIMESTAMP}"
 //  uri:    "https://github.com/sbt/launcher.git#1.0"
   }
   {
     name:   "sbt-website"
     uri:    "https://github.com/sbt/website.git#1.0.x"
+    set-version-suffix: "nightly-${TIMESTAMP}"
   }
 
 ]}
