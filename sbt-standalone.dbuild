@@ -12,44 +12,38 @@ build: {
   {
     name:   sbt
     uri:    "https://github.com/sbt/sbt.git#1.0.x"
-    set-version-suffix: "pre-"${TIMESTAMP}
+    set-version-suffix: ${TIMESTAMP}
     extra.run-tests: false
+    // the current sbt build always tries to upload sbt-launch to sbt/sbt
     extra.exclude: bundledLauncherProj
   }
 
   {
     name:   zinc
     uri:    "https://github.com/sbt/zinc.git#1.0"
-    set-version-suffix: "pre-"${TIMESTAMP}
+    set-version-suffix: ${TIMESTAMP}
     extra.run-tests: false
   }
 
   {
     name:   sbt-io
     uri:    "https://github.com/sbt/io.git#1.0"
-    set-version-suffix: "pre-"${TIMESTAMP}
+    set-version-suffix: ${TIMESTAMP}
   }
   {
     name:   sbt-util
     uri:    "https://github.com/sbt/util.git#1.0"
-    set-version-suffix: "pre-"${TIMESTAMP}
+    set-version-suffix: ${TIMESTAMP}
   }
   {
     name:   sbt-librarymanagement
     uri:    "https://github.com/sbt/librarymanagement.git#1.0"
-    set-version-suffix: "pre-"${TIMESTAMP}
-  }
-  {
-    name:   "sbt-launcher"
-    system: ivy
-    uri:    "ivy:org.scala-sbt#launcher;1.0.0"
-    set-version-suffix: "pre-"${TIMESTAMP}
-//  uri:    "https://github.com/sbt/launcher.git#1.0"
+    set-version-suffix: ${TIMESTAMP}
   }
   {
     name:   "sbt-website"
     uri:    "https://github.com/sbt/website.git#1.0.x"
-    set-version-suffix: "pre-"${TIMESTAMP}
+    set-version-suffix: ${TIMESTAMP}
   }
 
   ]
