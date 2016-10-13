@@ -47,7 +47,7 @@ build: {
 }
 
 options.deploy: [{
-  uri: "bintray:/typesafe/sbt-prereleases/sbt-prereleases-jenkins/"${TIMESTAMP}"#release"
+  uri: "bintray:/sbt/maven-snapshots/jenkins-sbt/"${TIMESTAMP}"#release"
   credentials: "/home/jenkinssbt/.bintray/.credentials"
 }]
 
