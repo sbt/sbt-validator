@@ -14,17 +14,15 @@ build: {
     uri:    "https://github.com/sbt/sbt.git#1.0.x"
     set-version-suffix: ${TIMESTAMP}
     extra.run-tests: false
-    // the current sbt build always tries to upload sbt-launch to sbt/sbt
-    extra.exclude: bundledLauncherProj
+    // restore sbt-launch to the standard publish task
+    extra.commands: [ "project bundledLauncherProj","set publish := sbt.Classpaths.publishTask(publishConfiguration, deliver).value" ]
   }
-
   {
     name:   zinc
     uri:    "https://github.com/sbt/zinc.git#1.0"
     set-version-suffix: ${TIMESTAMP}
     extra.run-tests: false
   }
-
   {
     name:   sbt-io
     uri:    "https://github.com/sbt/io.git#1.0"
@@ -45,7 +43,6 @@ build: {
     uri:    "https://github.com/sbt/website.git#1.0.x"
     set-version-suffix: ${TIMESTAMP}
   }
-
   ]
 }
 
