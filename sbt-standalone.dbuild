@@ -1,6 +1,37 @@
-vars.scala-bin-version: "2.12"
-vars.scala-version: ${vars.scala-bin-version}".1"
-vars.scala-xml-version: "1.0.6"
+vars: {
+  scala212-bin-version: "2.12"
+  scala212-version: ${vars.scala212-bin-version}".1"
+  scala212-xml-version: "1.0.6"
+
+  sbt: {
+    uri:    "https://github.com/sbt/sbt.git#1.0.x"
+    set-version-suffix: ${TIMESTAMP}
+    extra.run-tests: false
+    // restore sbt-launch to the standard publish task
+    extra.commands: [ "project bundledLauncherProj","set publish := sbt.Classpaths.publishTask(publishConfiguration, deliver).value" ]
+  }
+  zinc: {
+    uri:    "https://github.com/sbt/zinc.git#1.0"
+    set-version-suffix: ${TIMESTAMP}
+    extra.run-tests: false
+  }
+  io: {
+    uri:    "https://github.com/sbt/io.git#1.0"
+    set-version-suffix: ${TIMESTAMP}
+  }
+  util: {
+    uri:    "https://github.com/sbt/util.git#1.0"
+    set-version-suffix: ${TIMESTAMP}
+  }
+  lib: {
+    uri:    "https://github.com/sbt/librarymanagement.git#1.0"
+    set-version-suffix: ${TIMESTAMP}
+  }
+  web: {
+    uri:    "https://github.com/sbt/website.git#1.0.x"
+    set-version-suffix: ${TIMESTAMP}
+  }
+}
 
 build: {
   check-missing: [ false, false ]
@@ -8,83 +39,55 @@ build: {
   space.from: [ sbt, sbtplugins ]
   space.to: sbt
   sbt-version: "0.13.13"
-  extraction-version: ${vars.scala-version}
+  extraction-version: ${vars.scala212-version}
 
   projects: [
     {
-      name: scala
+      name: scala-212
       system: assemble
       extra.parts.cross-version: standard
       extra.parts.projects: [
         {
-          set-version: ${vars.scala-version}
-          name:   scala-library
+          set-version: ${vars.scala212-version}
+          name:   scala212-library
           system: aether
-          uri:   "aether:org.scala-lang#scala-library;"${vars.scala-version}
+          uri:   "aether:org.scala-lang#scala-library;"${vars.scala212-version}
           extra.sources: true  // Scala.js wants this
         }
         {
-          set-version: ${vars.scala-version}
-          name:   scala-reflect
+          set-version: ${vars.scala212-version}
+          name:   scala212-reflect
           system: aether
-          uri:   "aether:org.scala-lang#scala-reflect;"${vars.scala-version}
+          uri:   "aether:org.scala-lang#scala-reflect;"${vars.scala212-version}
         }
         {
-          set-version: ${vars.scala-version}
-          name:   scala-compiler
+          set-version: ${vars.scala212-version}
+          name:   scala212-compiler
           system: aether
-          uri:   "aether:org.scala-lang#scala-compiler;"${vars.scala-version}
+          uri:   "aether:org.scala-lang#scala-compiler;"${vars.scala212-version}
         }
         {
-          set-version: ${vars.scala-xml-version}
-          name:   scala-xml
+          set-version: ${vars.scala212-xml-version}
+          name:   scala212-xml
           system: aether
-          uri:   "aether:org.scala-lang.modules#scala-xml_"${vars.scala-bin-version}";"${vars.scala-xml-version}
+          uri:   "aether:org.scala-lang.modules#scala-xml_"${vars.scala212-bin-version}";"${vars.scala212-xml-version}
         }
       ]
     }
-    {
-      name:   sbt
-      uri:    "https://github.com/sbt/sbt.git#1.0.x"
-      set-version-suffix: ${TIMESTAMP}
-      extra.run-tests: false
-      // restore sbt-launch to the standard publish task
-      extra.commands: [ "project bundledLauncherProj","set publish := sbt.Classpaths.publishTask(publishConfiguration, deliver).value" ]
-    }
-    {
-      name:   zinc
-      uri:    "https://github.com/sbt/zinc.git#1.0"
-      set-version-suffix: ${TIMESTAMP}
-      extra.run-tests: false
-    }
-    {
-      name:   sbt-io
-      uri:    "https://github.com/sbt/io.git#1.0"
-      set-version-suffix: ${TIMESTAMP}
-    }
-    {
-      name:   sbt-util
-      uri:    "https://github.com/sbt/util.git#1.0"
-      set-version-suffix: ${TIMESTAMP}
-    }
-    {
-      name:   sbt-librarymanagement
-      uri:    "https://github.com/sbt/librarymanagement.git#1.0"
-      set-version-suffix: ${TIMESTAMP}
-    }
-    {
-      name:   sbt-website
-      uri:    "https://github.com/sbt/website.git#1.0.x"
-      set-version-suffix: ${TIMESTAMP}
-    }
+    ${vars.sbt}     { name: sbt212 }
+    ${vars.zinc}    { name: zinc212 }
+    ${vars.io}      { name: sbt212-io }
+    ${vars.util}    { name: sbt212-util }
+    ${vars.lib}     { name: sbt212-librarymanagement }
+    ${vars.web}     { name: sbt212-website }
   ]
 }
 
-options.deploy: [{
-  projects: [ sbt, zinc, sbt-io, sbt-util, sbt-librarymanagement, sbt-website ]
-  uri: "bintray:/sbt/maven-snapshots/jenkins-sbt/"${TIMESTAMP}"#release"
-  credentials: "/home/jenkinssbt/.bintray/.credentials"
-}]
+//options.deploy: [{
+//  projects: [ sbt, zinc, sbt-io, sbt-util, sbt-librarymanagement, sbt-website ]
+//  uri: "bintray:/sbt/maven-snapshots/jenkins-sbt/"${TIMESTAMP}"#release"
+//  credentials: "/home/jenkinssbt/.bintray/.credentials"
+//}]
 
 options.resolvers: {
   "R0000" : "local",
