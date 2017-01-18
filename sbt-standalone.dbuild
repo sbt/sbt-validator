@@ -3,6 +3,11 @@ vars: {
   scala212-version: ${vars.scala212-bin-version}".1"
   scala212-xml-version: "1.0.6"
 
+  scala211-bin-version: "2.11"
+  scala211-version: ${vars.scala211-bin-version}".8"
+  scala211-xml-version: "1.0.2"
+  scala211-par-comb-version: "1.0.1"
+
   sbt: {
     uri:    "https://github.com/sbt/sbt.git#1.0.x"
     set-version-suffix: ${TIMESTAMP}
@@ -33,11 +38,11 @@ vars: {
   }
 }
 
-build: {
+build: [{
   check-missing: [ false, false ]
   cross-version: [ standard, standard ]
-  space.from: [ sbt, sbtplugins ]
-  space.to: sbt
+  space.from: [ sbt212, sbtplugins212 ]
+  space.to: sbt212
   sbt-version: "0.13.13"
   extraction-version: ${vars.scala212-version}
 
@@ -75,16 +80,73 @@ build: {
       ]
     }
     ${vars.sbt}     { name: sbt212 }
-    ${vars.zinc}    { name: zinc212 }
     ${vars.io}      { name: sbt212-io }
     ${vars.util}    { name: sbt212-util }
     ${vars.lib}     { name: sbt212-librarymanagement }
     ${vars.web}     { name: sbt212-website }
+    ${vars.zinc}    { name: sbt212-zinc }
+  ]
+},{
+  check-missing: [ false, false ]
+  cross-version: [ standard, standard ]
+  space.from: [ sbt211, sbtplugins211 ]
+  space.to: sbt211
+  sbt-version: "0.13.13"
+  extraction-version: ${vars.scala211-version}
+
+  projects: [
+    {
+      name: scala-211
+      system: assemble
+      extra.parts.cross-version: standard
+      extra.parts.projects: [
+        {
+          set-version: ${vars.scala211-version}
+          name:   scala211-library
+          system: aether
+          uri:   "aether:org.scala-lang#scala-library;"${vars.scala211-version}
+          extra.sources: true  // Scala.js wants this
+        }
+        {
+          set-version: ${vars.scala211-version}
+          name:   scala211-reflect
+          system: aether
+          uri:   "aether:org.scala-lang#scala-reflect;"${vars.scala211-version}
+        }
+        {
+          set-version: ${vars.scala211-version}
+          name:   scala211-compiler
+          system: aether
+          uri:   "aether:org.scala-lang#scala-compiler;"${vars.scala211-version}
+        }
+        {
+          set-version: ${vars.scala211-xml-version}
+          name:   scala211-xml
+          system: aether
+          uri:   "aether:org.scala-lang.modules#scala-xml_"${vars.scala211-bin-version}";"${vars.scala211-xml-version}
+        }
+        {
+          set-version: ${vars.scala211-par-comb-version}
+          name:   scala211-par-comb
+          system: aether
+          uri:   "aether:org.scala-lang.modules#scala-parser-combinators_"${vars.scala211-bin-version}";"${vars.scala211-par-comb-version}
+        }
+      ]
+    }
+    ${vars.sbt}     { name: sbt211 }
+    ${vars.io}      { name: sbt211-io }
+    ${vars.util}    { name: sbt211-util }
+    ${vars.lib}     { name: sbt211-librarymanagement }
+    ${vars.web}     { name: sbt211-website }
+    ${vars.zinc}    { name: sbt211-zinc }
   ]
 }
-
+]
 //options.deploy: [{
-//  projects: [ sbt, zinc, sbt-io, sbt-util, sbt-librarymanagement, sbt-website ]
+//  projects: [
+//    sbt212, sbt212-io, sbt212-util, sbt212-librarymanagement, sbt212-website, sbt212-zinc,
+//    sbt211, sbt211-io, sbt211-util, sbt211-librarymanagement, sbt211-website, sbt211-zinc,
+//  ]
 //  uri: "bintray:/sbt/maven-snapshots/jenkins-sbt/"${TIMESTAMP}"#release"
 //  credentials: "/home/jenkinssbt/.bintray/.credentials"
 //}]
