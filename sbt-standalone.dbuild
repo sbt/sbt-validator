@@ -206,15 +206,15 @@ build: [{
   ]
 }
 ]
-//options.deploy: [{
-//  projects: [
-//    sbt212, sbt212-io, sbt212-util, sbt212-librarymanagement, sbt212-website, sbt212-zinc,
-//    sbt211, sbt211-io, sbt211-util, sbt211-librarymanagement, sbt211-website, sbt211-zinc,
-//    sbt210, sbt210-io, sbt210-util, sbt210-librarymanagement, sbt210-website, sbt210-zinc
-//  ]
-//  uri: "bintray:/sbt/maven-snapshots/jenkins-sbt/"${TIMESTAMP}"#release"
-//  credentials: "/home/jenkinssbt/.bintray/.credentials"
-//}]
+options.deploy: [{
+  projects: [
+    sbt212, sbt212-io, sbt212-util, sbt212-librarymanagement, sbt212-website, sbt212-zinc,
+    sbt211, sbt211-io, sbt211-util, sbt211-librarymanagement, sbt211-website, sbt211-zinc,
+    sbt210, sbt210-io, sbt210-util, sbt210-librarymanagement, sbt210-website, sbt210-zinc
+  ]
+  uri: "bintray:/sbt/maven-snapshots/jenkins-sbt/"${TIMESTAMP}"#release"
+  credentials: "/home/jenkinssbt/.bintray/.credentials"
+}]
 
 options.resolvers: {
   "R0000" : "local",
