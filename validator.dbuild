@@ -1,0 +1,61 @@
+
+//include file("212.conf")
+//include file("211.conf")
+//include file("210.conf")
+//options.deploy: [ ${?vars.deploy212}, ${?vars.deploy211}, ${?vars.deploy210} ]
+
+vars: {
+  scala212-bin-version: "2.12"
+  scala212-version: ${vars.scala212-bin-version}".1"
+  scala212-xml-version: "1.0.6"
+  scala212-par-comb-version: "1.0.5"
+
+  scala211-bin-version: "2.11"
+  scala211-version: ${vars.scala211-bin-version}".8"
+  scala211-xml-version: "1.0.2"
+  scala211-par-comb-version: "1.0.1"
+
+  scala210-bin-version: "2.10"
+  scala210-version: ${vars.scala210-bin-version}".6"
+
+  sbt: {
+    uri:    "https://github.com/sbt/sbt.git#"${sbt}
+    set-version-suffix: ${TIMESTAMP}
+    extra.run-tests: false
+    // restore sbt-launch to the standard publish task
+    extra.commands: [ "project bundledLauncherProj","set publish := sbt.Classpaths.publishTask(publishConfiguration, deliver).value" ]
+  }
+  zinc: {
+    uri:    "https://github.com/sbt/zinc.git#"${zinc}
+    set-version-suffix: ${TIMESTAMP}
+    extra.run-tests: false
+  }
+  io: {
+    uri:    "https://github.com/sbt/io.git#"${io}
+    set-version-suffix: ${TIMESTAMP}
+  }
+  util: {
+    uri:    "https://github.com/sbt/util.git#"${util}
+    set-version-suffix: ${TIMESTAMP}
+  }
+  lib: {
+    uri:    "https://github.com/sbt/librarymanagement.git#"${librarymanagement}
+    set-version-suffix: ${TIMESTAMP}
+  }
+  web: {
+    uri:    "https://github.com/sbt/website.git#"${website}
+    set-version-suffix: ${TIMESTAMP}
+  }
+
+  deployUri: "bintray:/sbt/maven-snapshots/jenkins-sbt/"${TIMESTAMP}"#release"
+  deployCredentials: "/home/jenkinssbt/.bintray/.credentials"
+//  deployCredentials: "/home/cunei/activities/clones/sbt-standalone-build/polenta"
+}
+
+build: [ ${?vars.sbtBuild212}, ${?vars.sbtBuild211}, ${?vars.sbtBuild210} ]
+
+options.resolvers: {
+  "R0000" : "local"
+  "R0001" : "proxy-ch-maven: https://proxy-ch.typesafe.com:8082/artifactory/repo"
+  "R0002" : "proxy-ch-ivy: https://proxy-ch.typesafe.com:8082/artifactory/repo, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]"
+}
