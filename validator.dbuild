@@ -42,10 +42,6 @@ vars: {
     uri:    "https://github.com/sbt/librarymanagement.git#"${librarymanagement}
     set-version-suffix: ${TIMESTAMP}
   }
-  web: {
-    uri:    "https://github.com/sbt/website.git#"${website}
-    set-version-suffix: ${TIMESTAMP}
-  }
 
   deployUri: "bintray:/sbt/maven-snapshots/jenkins-sbt/"${TIMESTAMP}"#release"
   deployCredentials: "/home/jenkinssbt/.bintray/.credentials"
