@@ -6,14 +6,14 @@
 
 vars: {
   scala212-bin-version: "2.12"
-  scala212-version: ${vars.scala212-bin-version}".1"
+  scala212-version: ${vars.scala212-bin-version}".2"
   scala212-xml-version: "1.0.6"
   scala212-par-comb-version: "1.0.5"
 
   scala211-bin-version: "2.11"
   scala211-version: ${vars.scala211-bin-version}".8"
-  scala211-xml-version: "1.0.2"
-  scala211-par-comb-version: "1.0.1"
+  scala211-xml-version: "1.0.5"
+  scala211-par-comb-version: "1.0.4"
 
   scala210-bin-version: "2.10"
   scala210-version: ${vars.scala210-bin-version}".6"
