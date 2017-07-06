@@ -21,14 +21,13 @@ vars: {
   sbt: {
     uri:    "https://github.com/sbt/sbt.git#"${sbt}
     set-version-suffix: ${TIMESTAMP}
-    extra.run-tests: false
+    extra.test-tasks: [ test, scripted ]
     // restore sbt-launch to the standard publish task
     extra.commands: [ "project bundledLauncherProj","set publish := sbt.Classpaths.publishTask(publishConfiguration, deliver).value" ]
   }
   zinc: {
     uri:    "https://github.com/sbt/zinc.git#"${zinc}
     set-version-suffix: ${TIMESTAMP}
-    extra.run-tests: false
   }
   io: {
     uri:    "https://github.com/sbt/io.git#"${io}
