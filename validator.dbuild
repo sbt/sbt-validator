@@ -1,4 +1,6 @@
-
+//These commented lines below are inserted by the sbt validator as needed.
+//See: https://jenkins.scala-sbt.org:8592/job/sbt%20validator/
+//
 //include file("212.conf")
 //include file("211.conf")
 //include file("210.conf")
@@ -18,33 +20,50 @@ vars: {
   scala210-bin-version: "2.10"
   scala210-version: ${vars.scala210-bin-version}".6"
 
+  // if $SPACE_PREFIX is undefined, or "", then dbuild will compile
+  // all subprojects on top of each other. If it is anything else,
+  // each subproject's artifacts will end up in a dummy space, therefore
+  // they will all be in practice compiled in isolation, using the
+  // dependencies defined in each of the subprojects.
+  space-to-prefix: ""
+  space-to-prefix: ${?SPACE_PREFIX}
+
   sbt: {
     uri:    "https://github.com/sbt/sbt.git#"${sbt}
     set-version-suffix: ${TIMESTAMP}
-    extra.test-tasks: [ test, scripted ]
+    extra.skip-missing-tests: true
+    extra.test-tasks: [ test ]
+//    extra.test-tasks: [ test, scripted ]
     // restore sbt-launch to the standard publish task
     extra.commands: [ "project bundledLauncherProj","set publish := sbt.Classpaths.publishTask(publishConfiguration, deliver).value" ]
   }
   zinc: {
     uri:    "https://github.com/sbt/zinc.git#"${zinc}
     set-version-suffix: ${TIMESTAMP}
+    extra.test-tasks: [ test ]
+//    extra.test-tasks: [ test, scripted ]
   }
   io: {
     uri:    "https://github.com/sbt/io.git#"${io}
     set-version-suffix: ${TIMESTAMP}
+    extra.test-tasks: [ test, scripted ]
+    extra.skip-missing-tests: true
   }
   util: {
     uri:    "https://github.com/sbt/util.git#"${util}
     set-version-suffix: ${TIMESTAMP}
+    extra.test-tasks: [ test, scripted ]
+    extra.skip-missing-tests: true
   }
   lib: {
     uri:    "https://github.com/sbt/librarymanagement.git#"${librarymanagement}
     set-version-suffix: ${TIMESTAMP}
+    extra.test-tasks: [ test, scripted ]
+    extra.skip-missing-tests: true
   }
 
   deployUri: "bintray:/sbt/maven-snapshots/jenkins-sbt/"${TIMESTAMP}"#release"
   deployCredentials: "/home/jenkinssbt/.bintray/.credentials"
-//  deployCredentials: "/home/cunei/activities/clones/sbt-standalone-build/polenta"
 }
 
 build: [ ${?vars.sbtBuild212}, ${?vars.sbtBuild211}, ${?vars.sbtBuild210} ]
