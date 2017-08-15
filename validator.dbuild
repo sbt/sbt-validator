@@ -40,8 +40,8 @@ vars: {
   zinc: {
     uri:    "https://github.com/sbt/zinc.git#"${zinc}
     set-version-suffix: ${TIMESTAMP}
-    extra.test-tasks: [ test ]
-//    extra.test-tasks: [ test, scripted ]
+    extra.test-tasks: [ test, scripted ]
+    extra.run-tests: false
   }
   io: {
     uri:    "https://github.com/sbt/io.git#"${io}
