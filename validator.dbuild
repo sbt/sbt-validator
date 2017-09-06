@@ -4,7 +4,10 @@
 //include file("212.conf")
 //include file("211.conf")
 //include file("210.conf")
-//options.deploy: [ ${?vars.deploy212}, ${?vars.deploy211}, ${?vars.deploy210} ]
+//options.deploy: []
+//options.deploy: [ ${?vars.localDeploy212}, ${?vars.localDeploy211}, ${?vars.localDeploy210} ] ${options.deploy}
+//options.deploy: [ ${?vars.bintrayDeploy212}, ${?vars.bintrayDeploy211}, ${?vars.bintrayDeploy210} ]  ${options.deploy}
+//options.deploy: [ ${?vars.artifactoryDeploy212}, ${?vars.artifactoryDeploy211}, ${?vars.artifactoryDeploy210} ]  ${options.deploy}
 
 vars: {
   scala212-bin-version: "2.12"
@@ -62,8 +65,14 @@ vars: {
     extra.skip-missing-tests: true
   }
 
-  deployUri: "bintray:/sbt/maven-snapshots/jenkins-sbt/"${TIMESTAMP}"#release"
-  deployCredentials: "/home/jenkinssbt/.bintray/.credentials"
+  bintrayDeployUri: "bintray:/sbt/maven-snapshots/jenkins-sbt/"${TIMESTAMP}"#release"
+  bintrayDeployCredentials: "/home/jenkinssbt/.bintray/.credentials"
+
+# Currently not deploying to Artifactory
+#  artifactoryDeployUri: "https://proxy-ch.typesafe.com:8082/artifactory/sbt-snapshots"
+#  artifactoryDeployCredentials: "/home/jenkinssbt/...../.credentials"
+
+  localDeployUri: "file:///home/jenkinssbt/sbt-snapshots"
 }
 
 build: [ ${?vars.sbtBuild212}, ${?vars.sbtBuild211}, ${?vars.sbtBuild210} ]
