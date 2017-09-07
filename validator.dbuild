@@ -77,8 +77,9 @@ vars: {
 
 build: [ ${?vars.sbtBuild212}, ${?vars.sbtBuild211}, ${?vars.sbtBuild210} ]
 
-//options.resolvers: {
-//  "R0000" : "local"
-//  "R0001" : "proxy-ch-maven: https://proxy-ch.typesafe.com:8082/artifactory/repo"
-//  "R0002" : "proxy-ch-ivy: https://proxy-ch.typesafe.com:8082/artifactory/repo, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]"
-//}
+options.resolvers: {
+  "R0000" : "local"
+  "R0001" : "proxy-ch-maven: https://proxy-ch.typesafe.com:8082/artifactory/repo"
+  "R0002" : "proxy-ch-ivy: https://proxy-ch.typesafe.com:8082/artifactory/repo, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]"
+  "R0003" : "sbt-toni: https://dl.bintray.com/cunei/sbt-temp/"
+}
