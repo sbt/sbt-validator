@@ -72,7 +72,7 @@ vars: {
 #  artifactoryDeployUri: "https://proxy-ch.typesafe.com:8082/artifactory/sbt-snapshots"
 #  artifactoryDeployCredentials: "/home/jenkinssbt/...../.credentials"
 
-  localDeployUri: "file:///home/jenkinssbt/sbt-snapshots"
+  localDeployUri: "file:///localhome/jenkinssbt/sbt-snapshots"
 }
 
 build: [ ${?vars.sbtBuild212}, ${?vars.sbtBuild211}, ${?vars.sbtBuild210} ]
