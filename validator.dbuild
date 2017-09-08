@@ -11,7 +11,7 @@
 
 vars: {
   scala212-bin-version: "2.12"
-  scala212-version: ${vars.scala212-bin-version}".2"
+  scala212-version: ${vars.scala212-bin-version}".3"
   scala212-xml-version: "1.0.6"
   scala212-par-comb-version: "1.0.5"
 
