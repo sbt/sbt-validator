@@ -1,0 +1,83 @@
+vars: {
+  scala212-bin-version: "2.12"
+  scala212-version: ${vars.scala212-bin-version}".3"
+  scala212-xml-version: "1.0.6"
+  scala212-par-comb-version: "1.0.5"
+
+  // We test these branches/commits.
+  // All projects are built independently
+  sbtio: "1.x"
+  sbtbintray: "master"
+}
+
+build: {
+  check-missing: [ false, false ]
+  cross-version: [ standard, standard ]
+  space.from: default
+  space.to: ""
+  sbt-version: "${FRESHSBTVERSION}"
+  extraction-version: ${vars.scala212-version}
+
+  projects: [
+    {
+      name: scala-212
+      system: assemble
+      space.to: default
+      extra.parts.cross-version: standard
+      extra.parts.projects: [
+        {
+          set-version: ${vars.scala212-version}
+          name:   scala212-library
+          system: aether
+          uri:   "aether:org.scala-lang#scala-library;"${vars.scala212-version}
+          extra.sources: true  // Scala.js wants this
+        }
+        {
+          set-version: ${vars.scala212-version}
+          name:   scala212-reflect
+          system: aether
+          uri:   "aether:org.scala-lang#scala-reflect;"${vars.scala212-version}
+        }
+        {
+          set-version: ${vars.scala212-version}
+          name:   scala212-compiler
+          system: aether
+          uri:   "aether:org.scala-lang#scala-compiler;"${vars.scala212-version}
+        }
+        {
+          set-version: ${vars.scala212-xml-version}
+          name:   scala212-xml
+          system: aether
+          uri:   "aether:org.scala-lang.modules#scala-xml_"${vars.scala212-bin-version}";"${vars.scala212-xml-version}
+        }
+        {
+          set-version: ${vars.scala212-par-comb-version}
+          name:   scala212-par-comb
+          system: aether
+          uri:   "aether:org.scala-lang.modules#scala-parser-combinators_"${vars.scala212-bin-version}";"${vars.scala212-par-comb-version}
+        }
+      ]
+    }
+    io: {
+      uri: "https://github.com/sbt/io.git#"${vars.sbtio}
+      name: "sbtio"
+      set-version-suffix: ${TIMESTAMP}
+      extra.test-tasks: [ test, scripted ]
+      extra.skip-missing-tests: true
+    }
+    sbtbintray: {
+      uri: "https://github.com/sbt/sbt-bintray.git#"${vars.sbtbintray}
+      name: "sbtbintray"
+      set-version-suffix: ${TIMESTAMP}
+      extra.test-tasks: [ test, scripted ]
+      extra.skip-missing-tests: true
+    }
+]
+
+options.resolvers: {
+  "R0000" : "local"
+  "R0001" : "proxy-ch-maven: https://proxy-ch.typesafe.com:8082/artifactory/repo"
+  "R0002" : "proxy-ch-ivy: https://proxy-ch.typesafe.com:8082/artifactory/repo, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]"
+  "R0003" : "sbt-toni: https://dl.bintray.com/cunei/sbt-temp/"
+  "R0004" : "file:///home/cunei/activities/clones/sbt-standalone-build/sbt-snapshots"
+}
