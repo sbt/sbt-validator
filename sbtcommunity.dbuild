@@ -15,7 +15,7 @@ build: {
   cross-version: [ standard, standard ]
   space.from: default
   space.to: ""
-  sbt-version: "${FRESHSBTVERSION}"
+  sbt-version: ${FRESHSBTVERSION}
   extraction-version: ${vars.scala212-version}
 
   projects: [
@@ -58,26 +58,26 @@ build: {
         }
       ]
     }
-    io: {
-      uri: "https://github.com/sbt/io.git#"${vars.sbtio}
+    {
       name: "sbtio"
-      set-version-suffix: ${TIMESTAMP}
+      uri: "https://github.com/sbt/io.git#"${vars.sbtio}
       extra.test-tasks: [ test, scripted ]
       extra.skip-missing-tests: true
     }
-    sbtbintray: {
-      uri: "https://github.com/sbt/sbt-bintray.git#"${vars.sbtbintray}
+    {
       name: "sbtbintray"
-      set-version-suffix: ${TIMESTAMP}
+      uri: "https://github.com/sbt/sbt-bintray.git#"${vars.sbtbintray}
       extra.test-tasks: [ test, scripted ]
       extra.skip-missing-tests: true
     }
-]
+  ]
+}
 
 options.resolvers: {
   "R0000" : "local"
-  "R0001" : "proxy-ch-maven: https://proxy-ch.typesafe.com:8082/artifactory/repo"
-  "R0002" : "proxy-ch-ivy: https://proxy-ch.typesafe.com:8082/artifactory/repo, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]"
-  "R0003" : "sbt-toni: https://dl.bintray.com/cunei/sbt-temp/"
-  "R0004" : "file:///home/cunei/activities/clones/sbt-standalone-build/sbt-snapshots"
+  "R0001" : "sbt-snapshots: file:///localhome/jenkinssbt/sbt-snapshots"
+# "R0001" : "sbt-snapshots: file:///home/cunei/activities/clones/sbt-standalone-build/sbt-snapshots"
+  "R0002" : "proxy-ch-maven: https://proxy-ch.typesafe.com:8082/artifactory/repo"
+  "R0003" : "proxy-ch-ivy: https://proxy-ch.typesafe.com:8082/artifactory/repo, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]"
+  "R0004" : "sbt-toni: https://dl.bintray.com/cunei/sbt-temp/"
 }
