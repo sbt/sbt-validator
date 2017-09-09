@@ -33,7 +33,7 @@ vars: {
 
   sbt: {
     uri:    "https://github.com/sbt/sbt.git#"${sbt}
-    set-version-suffix: ${TIMESTAMP}
+    set-version-suffix: "bin-"${TIMESTAMP}
     extra.skip-missing-tests: true
     extra.test-tasks: [ test ]
 //    extra.test-tasks: [ test, scripted ]
@@ -42,25 +42,25 @@ vars: {
   }
   zinc: {
     uri:    "https://github.com/sbt/zinc.git#"${zinc}
-    set-version-suffix: ${TIMESTAMP}
+    set-version-suffix: "bin-"${TIMESTAMP}
     extra.test-tasks: [ test, scripted ]
     extra.run-tests: false
   }
   io: {
     uri:    "https://github.com/sbt/io.git#"${io}
-    set-version-suffix: ${TIMESTAMP}
+    set-version-suffix: "bin-"${TIMESTAMP}
     extra.test-tasks: [ test, scripted ]
     extra.skip-missing-tests: true
   }
   util: {
     uri:    "https://github.com/sbt/util.git#"${util}
-    set-version-suffix: ${TIMESTAMP}
+    set-version-suffix: "bin-"${TIMESTAMP}
     extra.test-tasks: [ test, scripted ]
     extra.skip-missing-tests: true
   }
   lib: {
     uri:    "https://github.com/sbt/librarymanagement.git#"${librarymanagement}
-    set-version-suffix: ${TIMESTAMP}
+    set-version-suffix: "bin-"${TIMESTAMP}
     extra.test-tasks: [ test, scripted ]
     extra.skip-missing-tests: true
   }
