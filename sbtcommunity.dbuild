@@ -15,7 +15,6 @@ build: {
   cross-version: [ standard, standard ]
   space.from: default
   space.to: ""
-  sbt-version: ${FRESHSBTVERSION}
   extraction-version: ${vars.scala212-version}
 
   projects: [
@@ -24,12 +23,14 @@ build: {
       uri: "https://github.com/sbt/io.git#"${vars.sbtio}
       extra.test-tasks: [ test, scripted ]
       extra.skip-missing-tests: true
+      extra.sbt-version: ${FRESHSBTVERSION}
     }
     {
       name: "sbtbintray"
       uri: "https://github.com/sbt/sbt-bintray.git#"${vars.sbtbintray}
       extra.test-tasks: [ test, scripted ]
       extra.skip-missing-tests: true
+      extra.commands: "set sbtVersion in pluginCrossBuild := \"1.0.1-bin-20170910T221101\""
     }
   ]
 }
