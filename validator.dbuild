@@ -24,9 +24,6 @@ vars: {
   scala210-version: ${vars.scala210-bin-version}".6"
 
   // propagate resolvers to the scripted tests
-  sbt-commands: [ "set scriptedLaunchOpts ++= Seq(\"-Dsbt.override.build.repos=true\", (\"-Dsbt.repository.config=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/repositories\"), (\"-Dsbt.ivy.home=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/ivy2\"))",
-                  "set bintrayRelease in root := ()" ]
-
   // if $SPACE_PREFIX is undefined, or "", then dbuild will compile
   // all subprojects on top of each other. If it is anything else,
   // each subproject's artifacts will end up in a dummy space, therefore
@@ -40,31 +37,37 @@ vars: {
     set-version-suffix: "bin-"${TIMESTAMP}
     extra.skip-missing-tests: true
     extra.test-tasks: [ test ]
-//    extra.test-tasks: [ test, scripted ]
+//    extra.test-tasks: [ test, scripted ]  // scripted testing too complex in sbt/sbt for dbuild
+    extra.commands: [ "set scriptedLaunchOpts ++= Seq(\"-Dsbt.override.build.repos=true\", (\"-Dsbt.repository.config=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/repositories\"), (\"-Dsbt.ivy.home=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/ivy2\"))",
+                      "set bintrayRelease in root := ()",
     // restore sbt-launch to the standard publish task
-    extra.commands: [ "project bundledLauncherProj","set publish := sbt.Classpaths.publishTask(publishConfiguration, deliver).value" ]
+                      "project bundledLauncherProj","set publish := sbt.Classpaths.publishTask(publishConfiguration, deliver).value" ]
   }
   zinc: {
     uri:    "https://github.com/sbt/zinc.git#"${zinc}
     set-version-suffix: "bin-"${TIMESTAMP}
+    extra.commands: [ "set scriptedLaunchOpts ++= Seq(\"-Dsbt.override.build.repos=true\", (\"-Dsbt.repository.config=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/repositories\"), (\"-Dsbt.ivy.home=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/ivy2\"))",
+                      "set bintrayRelease in root := ()" ]
     extra.test-tasks: [ test, scripted ]
     extra.run-tests: false
   }
   io: {
     uri:    "https://github.com/sbt/io.git#"${io}
     set-version-suffix: "bin-"${TIMESTAMP}
-    extra.test-tasks: [ test, scripted ]
+    extra.test-tasks: [ test ] // there are no scripted tests in sbt/io
     extra.skip-missing-tests: true
   }
   util: {
     uri:    "https://github.com/sbt/util.git#"${util}
     set-version-suffix: "bin-"${TIMESTAMP}
-    extra.test-tasks: [ test, scripted ]
+    extra.test-tasks: [ test ] // there are no scripted tests in sbt/util
     extra.skip-missing-tests: true
   }
   lib: {
     uri:    "https://github.com/sbt/librarymanagement.git#"${librarymanagement}
     set-version-suffix: "bin-"${TIMESTAMP}
+    extra.commands: [ "set scriptedLaunchOpts ++= Seq(\"-Dsbt.override.build.repos=true\", (\"-Dsbt.repository.config=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/repositories\"), (\"-Dsbt.ivy.home=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/ivy2\"))",
+                      "set bintrayRelease in root := ()" ]
     extra.test-tasks: [ test, scripted ]
     extra.skip-missing-tests: true
   }
