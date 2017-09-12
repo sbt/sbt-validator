@@ -23,6 +23,9 @@ vars: {
   scala210-bin-version: "2.10"
   scala210-version: ${vars.scala210-bin-version}".6"
 
+  // propagate resolvers to the scripted tests
+  sbt-commands: "set scriptedLaunchOpts ++= Seq(\"-Dsbt.override.build.repos=true\", (\"-Dsbt.repository.config=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/repositories\"), (\"-Dsbt.ivy.home=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/ivy2\"))"
+
   // if $SPACE_PREFIX is undefined, or "", then dbuild will compile
   // all subprojects on top of each other. If it is anything else,
   // each subproject's artifacts will end up in a dummy space, therefore
