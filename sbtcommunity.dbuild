@@ -32,7 +32,7 @@ build: {
       uri: "https://github.com/sbt/sbt-bintray.git#"${vars.sbtbintray}
       extra.test-tasks: [ test, scripted ]
       extra.skip-missing-tests: true
-      extra.commands: "set sbtVersion in pluginCrossBuild := \"1.0.1-bin-20170910T221101\""
+      extra.commands: [ "set sbtVersion in pluginCrossBuild := \""${FRESHSBTVERSION}"\"" ]
     }
   ]
 }
