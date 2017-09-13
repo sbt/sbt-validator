@@ -36,18 +36,15 @@ vars: {
     uri:    "https://github.com/sbt/sbt.git#"${sbt}
     set-version-suffix: "bin-"${TIMESTAMP}
     extra.skip-missing-tests: true
-    extra.test-tasks: [ test ]
-//    extra.test-tasks: [ test, scripted ]  // scripted testing too complex in sbt/sbt for dbuild
+    extra.test-tasks: [ test ] //, scripted ]
     extra.commands: [ "set scriptedLaunchOpts ++= Seq(\"-Dsbt.override.build.repos=true\", (\"-Dsbt.repository.config=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/repositories\"), (\"-Dsbt.ivy.home=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/ivy2\"))",
-                      "set bintrayRelease in root := ()",
+                      "set bintrayRelease in Global := ((): Unit)",
     // restore sbt-launch to the standard publish task
                       "project bundledLauncherProj","set publish := sbt.Classpaths.publishTask(publishConfiguration, deliver).value" ]
   }
   zinc: {
     uri:    "https://github.com/sbt/zinc.git#"${zinc}
     set-version-suffix: "bin-"${TIMESTAMP}
-    extra.commands: [ "set scriptedLaunchOpts ++= Seq(\"-Dsbt.override.build.repos=true\", (\"-Dsbt.repository.config=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/repositories\"), (\"-Dsbt.ivy.home=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/ivy2\"))",
-                      "set bintrayRelease in root := ()" ]
     extra.test-tasks: [ test, scripted ]
     extra.run-tests: false
   }
@@ -66,9 +63,7 @@ vars: {
   lib: {
     uri:    "https://github.com/sbt/librarymanagement.git#"${librarymanagement}
     set-version-suffix: "bin-"${TIMESTAMP}
-    extra.commands: [ "set scriptedLaunchOpts ++= Seq(\"-Dsbt.override.build.repos=true\", (\"-Dsbt.repository.config=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/repositories\"), (\"-Dsbt.ivy.home=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/ivy2\"))",
-                      "set bintrayRelease in root := ()" ]
-    extra.test-tasks: [ test, scripted ]
+    extra.test-tasks: [ test ] // there are no scripted tests in sbt/util
     extra.skip-missing-tests: true
   }
 

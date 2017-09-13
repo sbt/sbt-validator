@@ -31,7 +31,7 @@ build: {
       extra.test-tasks: [ test, scripted ]
       extra.skip-missing-tests: true
       extra.commands: [ "set scriptedLaunchOpts ++= Seq(\"-Dsbt.override.build.repos=true\", (\"-Dsbt.repository.config=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/repositories\"), (\"-Dsbt.ivy.home=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/ivy2\"))",
-                        "set bintrayRelease in root := ()",
+                        "set bintrayRelease in root := ((): Unit)",
                         "set sbtVersion in pluginCrossBuild := \""${FRESHSBTVERSION}"\"" ]
     }
   ]
