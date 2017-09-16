@@ -16,7 +16,7 @@ build: {
   space.from: default
   space.to: ""
   extraction-version: ${vars.scala212-version}
-  sbt-java-options: "-Dsbt.gigahorse.enabled=false"
+  sbt-java-options: "-Dsbt.gigahorse=false"
 
   projects: [
     {
