@@ -14,6 +14,7 @@ vars: {
   sbtbintray: "master"
 
   sbtBuilderVersion: ${FRESHSBTVERSION}
+  versionSuffix: "%commit%"
 }
 
 include file("sbt.conf")
