@@ -10,19 +10,6 @@
 //options.deploy: [ ${?vars.artifactoryDeploy212}, ${?vars.artifactoryDeploy211}, ${?vars.artifactoryDeploy210} ]  ${options.deploy}
 
 vars: {
-  scala212-bin-version: "2.12"
-  scala212-version: ${vars.scala212-bin-version}".3"
-  scala212-xml-version: "1.0.6"
-  scala212-par-comb-version: "1.0.5"
-
-  scala211-bin-version: "2.11"
-  scala211-version: ${vars.scala211-bin-version}".8"
-  scala211-xml-version: "1.0.5"
-  scala211-par-comb-version: "1.0.4"
-
-  scala210-bin-version: "2.10"
-  scala210-version: ${vars.scala210-bin-version}".6"
-
   // propagate resolvers to the scripted tests
   // if $SPACE_PREFIX is undefined, or "", then dbuild will compile
   // all subprojects on top of each other. If it is anything else,
@@ -32,40 +19,12 @@ vars: {
   space-to-prefix: ""
   space-to-prefix: ${?SPACE_PREFIX}
 
-  sbt: {
-    uri:    "https://github.com/sbt/sbt.git#"${sbt}
-    set-version-suffix: "bin-"${TIMESTAMP}
-    extra.skip-missing-tests: true
-    extra.test-tasks: [ test ] //, scripted ]
-    extra.commands: [ "set scriptedLaunchOpts ++= Seq(\"-Dsbt.override.build.repos=true\", (\"-Dsbt.repository.config=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/repositories\"), (\"-Dsbt.ivy.home=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/ivy2\"))",
-                      "set bintrayRelease in Global := ((): Unit)",
-    // restore sbt-launch to the standard publish task
-                      "project bundledLauncherProj","set publish := sbt.Classpaths.publishTask(publishConfiguration, deliver).value" ]
-  }
-  zinc: {
-    uri:    "https://github.com/sbt/zinc.git#"${zinc}
-    set-version-suffix: "bin-"${TIMESTAMP}
-    extra.test-tasks: [ test, scripted ]
-    extra.run-tests: false
-  }
-  io: {
-    uri:    "https://github.com/sbt/io.git#"${io}
-    set-version-suffix: "bin-"${TIMESTAMP}
-    extra.test-tasks: [ test ] // there are no scripted tests in sbt/io
-    extra.skip-missing-tests: true
-  }
-  util: {
-    uri:    "https://github.com/sbt/util.git#"${util}
-    set-version-suffix: "bin-"${TIMESTAMP}
-    extra.test-tasks: [ test ] // there are no scripted tests in sbt/util
-    extra.skip-missing-tests: true
-  }
-  lib: {
-    uri:    "https://github.com/sbt/librarymanagement.git#"${librarymanagement}
-    set-version-suffix: "bin-"${TIMESTAMP}
-    extra.test-tasks: [ test ] // there are no scripted tests in sbt/util
-    extra.skip-missing-tests: true
-  }
+  sbtVersion: ${sbt}
+  zincVersion: ${zinc}
+  ioVersion: ${io}
+  utilVersion: ${util}
+  librarymanagementVersion: ${librarymanagement}
+  versionSuffix: "bin-"${TIMESTAMP}
 
   bintrayDeployUri: "bintray:/sbt/maven-snapshots/jenkins-sbt/"${TIMESTAMP}"#release"
   bintrayDeployCredentials: "/home/jenkinssbt/.bintray/.credentials"
@@ -76,6 +35,8 @@ vars: {
 
   localDeployUri: "file:///localhome/jenkinssbt/sbt-snapshots"
 }
+
+include file("sbt.conf")
 
 build: [ ${?vars.sbtBuild212}, ${?vars.sbtBuild211}, ${?vars.sbtBuild210} ]
 

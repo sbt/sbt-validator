@@ -6,9 +6,15 @@ vars: {
 
   // We test these branches/commits.
   // All projects are built independently
-  sbtio: "1.x"
+  sbtVersion: "1.x"
+  zincVersion: "1.x"
+  ioVersion: "1.x"
+  utilVersion: "1.x"
+  librarymanagementVersion: "1.x"
   sbtbintray: "master"
 }
+
+include file("sbt.conf")
 
 build: {
   check-missing: [ false, false ]
@@ -19,13 +25,11 @@ build: {
   sbt-java-options: "-Dsbt.gigahorse=false"
 
   projects: [
-    {
-      name: "sbtio"
-      uri: "https://github.com/sbt/io.git#"${vars.sbtio}
-      extra.test-tasks: [ test, scripted ]
-      extra.skip-missing-tests: true
-      extra.sbt-version: ${FRESHSBTVERSION}
-    }
+    ${vars.sbt}     { name: sbt }
+    ${vars.io}      { name: sbt-io }
+    ${vars.util}    { name: sbt-util }
+    ${vars.lib}     { name: sbt-librarymanagement }
+    ${vars.zinc}    { name: sbt-zinc }
     {
       name: "sbtbintray"
       uri: "https://github.com/sbt/sbt-bintray.git#"${vars.sbtbintray}
