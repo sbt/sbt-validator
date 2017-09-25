@@ -25,7 +25,8 @@ vars: {
   utilVersion: ${util}
   librarymanagementVersion: ${librarymanagement}
   versionSuffix: "bin-"${TIMESTAMP}
-  sbtBuilderVersion: "standard" // use whatever sbt version is used by each project
+  sbtBuilderVersion: "1.0.2" // Not all sbt modules have been upgraded to 1.0.2 (needed for the Gigahorse flag)
+//  sbtBuilderVersion: "standard" // use whatever sbt version is used by each project
 
   bintrayDeployUri: "bintray:/sbt/maven-snapshots/jenkins-sbt/"${TIMESTAMP}"#release"
   bintrayDeployCredentials: "/home/jenkinssbt/.bintray/.credentials"
