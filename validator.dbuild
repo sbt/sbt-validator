@@ -25,6 +25,7 @@ vars: {
   utilVersion: ${util}
   librarymanagementVersion: ${librarymanagement}
   versionSuffix: "bin-"${TIMESTAMP}
+  sbtBuilderVersion: "standard" // use whatever sbt version is used by each project
 
   bintrayDeployUri: "bintray:/sbt/maven-snapshots/jenkins-sbt/"${TIMESTAMP}"#release"
   bintrayDeployCredentials: "/home/jenkinssbt/.bintray/.credentials"

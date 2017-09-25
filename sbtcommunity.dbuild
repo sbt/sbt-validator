@@ -12,6 +12,8 @@ vars: {
   utilVersion: "1.x"
   librarymanagementVersion: "1.x"
   sbtbintray: "master"
+
+  sbtBuilderVersion: ${FRESHSBTVERSION}
 }
 
 include file("sbt.conf")
