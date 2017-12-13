@@ -190,19 +190,19 @@ build: {
       extra.projects: ["core"]
     }
 
-    ${vars.base} {
-      name: "circe"
-      uri:  ${vars.uris.circe-uri}
-      extra.sbt-version: ${vars.sbt-1-version}
-      extra.projects: [
-        // easy
-        "core", "numbers"
-        // harder
-        "jawn"
-        // bunch more stuff that all depends on jawn
-        "parser", "generic", "literal", "scodec", "testing", "tests"
-      ]
-    }
+//    ${vars.base} {
+//      name: "circe"
+//      uri:  ${vars.uris.circe-uri}
+//      extra.sbt-version: ${vars.sbt-1-version}
+//      extra.projects: [
+//        // easy
+//        "core", "numbers"
+//        // harder
+//        "jawn"
+//        // bunch more stuff that all depends on jawn
+//        "parser", "generic", "literal", "scodec", "testing", "tests"
+//      ]
+//    }
 
     ${vars.base} {
       name: "circe-config"   
