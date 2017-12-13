@@ -15,6 +15,27 @@ vars: {
 
   sbtBuilderVersion: ${FRESHSBTVERSION}
   versionSuffix: "%commit%"
+
+  base: {}
+  default-commands: []
+  sbt-1-version: ${FRESHSBTVERSION}
+}
+vars.base.deps.inject: [] // ["com.lightbend#cloc-plugin"]
+
+vars.uris: {
+  akka-actor-uri:               "https://github.com/akka/akka.git"
+  akka-more-uri:                "https://github.com/akka/akka.git"
+  akka-http-uri:                "https://github.com/akka/akka-http.git#bc849bb03"  # was master
+  scalariform-uri:              "https://github.com/scala-ide/scalariform.git"
+  breeze-uri:                   "https://github.com/scalanlp/breeze.git"
+  lightbend-emoji-uri:          "https://github.com/lightbend/lightbend-emoji.git"
+  cats-effect-uri:              "https://github.com/typelevel/cats-effect.git#542290e22"  # was master
+  scalalib-uri:                 "https://github.com/ornicar/scalalib.git"
+  scalachess-uri:               "https://github.com/ornicar/scalachess.git#a1c8abe1e0"  # was master
+  akka-http-cors-uri:           "https://github.com/lomigmegard/akka-http-cors.git"
+  akka-http-session-uri:        "https://github.com/softwaremill/akka-http-session.git"
+  circe-uri:                    "https://github.com/scalacommunitybuild/circe.git#community-build-2.12"  # was master
+  circe-config-uri:             "https://github.com/circe/circe-config.git"
 }
 
 include file("sbt.conf")
@@ -35,6 +56,7 @@ build: {
     ${vars.zinc}    { name: sbt-zinc }
     {
       name: "sbtbintray"
+      // compile using 0.13, but compile a plugin that matches ${FRESHSBTVERSION}
       uri: "https://github.com/sbt/sbt-bintray.git#"${vars.sbtbintray}
       extra.test-tasks: [ test, scripted ]
       extra.skip-missing-tests: true
@@ -42,6 +64,156 @@ build: {
                         "set bintrayRelease in root := ((): Unit)",
                         "set sbtVersion in pluginCrossBuild := \""${FRESHSBTVERSION}"\"" ]
     }
+
+// Other projects, already ported to 1.x
+
+    ${vars.base} {
+      name: "akka-actor"
+      uri:  ${vars.uris.akka-actor-uri}
+      extra.sbt-version: ${vars.sbt-1-version}
+      extra.options: ["-Dakka.genjavadoc.enabled=false", "-Dakka.scaladoc.diagrams=false", "-Dakka.build.aggregateSamples=false"]
+      extra.projects: ["akka-actor"]
+      extra.commands: ${vars.default-commands} [
+        // https://github.com/scala/community-builds/issues/373
+        "set every apiURL := None"
+      ]
+    }
+
+    ${vars.base} {
+      name: "akka-more"
+      uri:  ${vars.uris.akka-more-uri}
+      extra.sbt-version: ${vars.sbt-1-version}
+      extra.options: ["-Dakka.genjavadoc.enabled=false", "-Dakka.scaladoc.diagrams=false", "-Dakka.build.aggregateSamples=false"]
+      extra.projects: ["akka-scala-nightly"]
+      extra.commands: ${vars.default-commands} [
+        // https://github.com/scala/community-builds/issues/373
+        "set every apiURL := None"
+      ]
+      extra.exclude: [
+        "akka-docs"   // this is Sphinx stuff, not really apropos here, no Sphinx on Jenkins anyway
+        "akka-actor"  // because we already built it in "akka"   
+        "akka-bench-jmh"  // we'd have to add a resolver to get the JMH dependency - ST 8/17/15
+      ]
+      // TODO wip on this at https://github.com/scala/community-builds/pull/317
+      extra.test-tasks: ["compile"]
+    }
+
+    // frozen (December 2017) at December 2017 commit before akka-actor and akka-stream
+    // dependencies were declared as "provided".  that means every downstream project
+    // needs updating. for now let's just freeze
+    ${vars.base} {
+      name: "akka-http"
+      uri:  ${vars.uris.akka-http-uri}
+      extra.sbt-version: ${vars.sbt-1-version}
+      extra.exclude: ["docs", "akka-http-bench-jmh"]
+      extra.options: [
+        "-Dakka.genjavadoc.enabled=false", "-Dakka.scaladoc.diagrams=false"
+        "-Dbintray.user=dummy", "-Dbintray.pass=dummy"
+      ]
+      // Scaladoc generation failure reported upstream at https://github.com/akka/akka/issues/21543
+      extra.commands: ${vars.default-commands} [
+        "set sources in doc in Compile in httpCore := List()"
+        "set every bintrayReleaseOnPublish := false"
+        // sbt-osgi doesn't like dbuild-mangled version numbers
+        "set every OsgiKeys.bundleVersion := \"10.0.0\""
+      ]
+      // "HTTP is sadly very timing sensitive we're working on improving its stability regularly,
+      // OK to disable it for now." - Konrad M, October 2016
+      extra.test-tasks: ["compile"]
+    }
+
+    ${vars.base} {
+      name: "scalariform"
+      uri: ${vars.uris.scalariform-uri}
+      extra.sbt-version: ${vars.sbt-1-version}
+    }
+
+    ${vars.base} {
+      name: "breeze"
+      uri:  ${vars.uris.breeze-uri}
+      extra.sbt-version: ${vars.sbt-1-version}
+      // failing tests not investigated/reported
+      extra.test-tasks: ["compile"]
+      // spire moved from org.spire to org.typelevel but breeze hasn't
+      // changed their dependency yet
+      deps.ignore: ["org.spire-math#spire"]
+      deps.inject: ${vars.base.deps.inject} [
+        "org.typelevel#spire"
+      ]
+      check-missing: false
+    }
+
+    ${vars.base} {
+      name: "lightbend-emoji"
+      uri:  ${vars.uris.lightbend-emoji-uri}
+      extra.sbt-version: ${vars.sbt-1-version}
+      extra.options: ["-Dbintray.user=dummy", "-Dbintray.pass=dummy"]
+    }
+
+    // frozen (November 2017) at an October 2017 commit, because more
+    // recent commits require a newer cats, too new for other libraries
+    // in the community build; see https://github.com/scala/community-builds/pull/624
+    ${vars.base} {
+      name: "cats-effect"
+      uri:  ${vars.uris.cats-effect-uri}
+      extra.projects: ["coreJVM", "lawsJVM"]  // no Scala.js plz
+      extra.sbt-version: ${vars.sbt-1-version}
+    }
+
+    ${vars.base} {
+      name: "scalalib"
+      uri:  ${vars.uris.scalalib-uri}
+      extra.sbt-version: ${vars.sbt-1-version}
+    }
+
+    // frozen (December 2017) at November 2017 before a newer commit
+    // introduced a test failure: https://github.com/ornicar/scalachess/issues/133
+    ${vars.base} {
+      name: "scalachess"
+      uri:  ${vars.uris.scalachess-uri}
+      extra.sbt-version: ${vars.sbt-1-version}
+    }
+
+    ${vars.base} {
+      name: "akka-http-cors"
+      uri:  ${vars.uris.akka-http-cors-uri}
+      extra.sbt-version: ${vars.sbt-1-version}
+      extra.exclude: ["akka-http-cors-bench-jmh"]
+    }
+
+    // dependency of scaladex.
+    // only attempt the subproject scaladex needs.
+    ${vars.base} {
+      name: "akka-http-session"
+      uri:  ${vars.uris.akka-http-session-uri}
+      extra.sbt-version: ${vars.sbt-1-version}
+      extra.projects: ["core"]
+    }
+
+    ${vars.base} {
+      name: "circe"
+      uri:  ${vars.uris.circe-uri}
+      extra.sbt-version: ${vars.sbt-1-version}
+      extra.projects: [
+        // easy
+        "core", "numbers"
+        // harder
+        "jawn"
+        // bunch more stuff that all depends on jawn
+        "parser", "generic", "literal", "scodec", "testing", "tests"
+      ]
+    }
+
+    ${vars.base} {
+      name: "circe-config"   
+      uri:  ${vars.uris.circe-config-uri}
+      extra.sbt-version: ${vars.sbt-1-version}
+      extra.commands: ${vars.default-commands} [
+        // too fragile
+        "removeScalacOptions -Xfatal-warnings"
+      ]
+    }
+
   ]
 }
 
