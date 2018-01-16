@@ -171,6 +171,9 @@ build: {
       uri:  ${vars.uris.cats-effect-uri}
       extra.projects: ["coreJVM", "lawsJVM"]  // no Scala.js plz
       extra.sbt-version: ${vars.sbt-1-version}
+      extra.commands: ${vars.default-commands} [
+        "set javacOptions ++= Seq(\"-Xss4M\")"
+      ]
     }
 
 //
