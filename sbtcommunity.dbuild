@@ -173,17 +173,28 @@ build: {
       extra.sbt-version: ${vars.sbt-1-version}
     }
 
-    ${vars.base} {
-      name: "scalalib"
-      uri:  ${vars.uris.scalalib-uri}
-      extra.sbt-version: ${vars.sbt-1-version}
-    }
-
+//
+// Scalachess depends on scalalib, which is not published anywhere in particular;
+// the Scala community build recompiles scalalib from source, but we have independent
+// projects. So: publish scalalib to an (otherwise empty) subspace of "default",
+// and scalachess looks in there (as well as into default). This is the only inter-project
+// dependency we have.
+//
     // frozen (December 2017) at November 2017 before a newer commit
     // introduced a test failure: https://github.com/ornicar/scalachess/issues/133
     ${vars.base} {
+      space.from: default.scalalib
+      space.to: ""
       name: "scalachess"
       uri:  ${vars.uris.scalachess-uri}
+      extra.sbt-version: ${vars.sbt-1-version}
+    }
+    // dependency of scalachess
+    ${vars.base} {
+      space.from: default
+      space.to: default.scalalib
+      name: "scalalib"
+      uri:  ${vars.uris.scalalib-uri}
       extra.sbt-version: ${vars.sbt-1-version}
     }
 
