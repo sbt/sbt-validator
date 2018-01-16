@@ -23,8 +23,7 @@ vars: {
 vars.base.deps.inject: [] // ["com.lightbend#cloc-plugin"]
 
 vars.uris: {
-  akka-actor-uri:               "https://github.com/akka/akka.git"
-  akka-more-uri:                "https://github.com/akka/akka.git"
+  akka-stuff-uri:               "https://github.com/akka/akka.git"
   akka-http-uri:                "https://github.com/akka/akka-http.git#bc849bb03"  # was master
   scalariform-uri:              "https://github.com/scala-ide/scalariform.git"
   breeze-uri:                   "https://github.com/scalanlp/breeze.git"
@@ -68,34 +67,21 @@ build: {
 // Other projects, already ported to 1.x
 
     ${vars.base} {
-      name: "akka-actor"
-      uri:  ${vars.uris.akka-actor-uri}
+      name: "akka-stuff"
+      uri:  ${vars.uris.akka-stuff-uri}
       extra.sbt-version: ${vars.sbt-1-version}
       extra.options: ["-Dakka.genjavadoc.enabled=false", "-Dakka.scaladoc.diagrams=false", "-Dakka.build.aggregateSamples=false"]
-      extra.projects: ["akka-actor"]
-      extra.commands: ${vars.default-commands} [
-        // https://github.com/scala/community-builds/issues/373
-        "set every apiURL := None"
-      ]
-    }
-
-    ${vars.base} {
-      name: "akka-more"
-      uri:  ${vars.uris.akka-more-uri}
-      extra.sbt-version: ${vars.sbt-1-version}
-      extra.options: ["-Dakka.genjavadoc.enabled=false", "-Dakka.scaladoc.diagrams=false", "-Dakka.build.aggregateSamples=false"]
-      extra.projects: ["akka-scala-nightly"]
+      extra.projects: ["akka-actor", "akka-scala-nightly"]
       extra.commands: ${vars.default-commands} [
         // https://github.com/scala/community-builds/issues/373
         "set every apiURL := None"
       ]
       extra.exclude: [
         "akka-docs"   // this is Sphinx stuff, not really apropos here, no Sphinx on Jenkins anyway
-        "akka-actor"  // because we already built it in "akka"   
         "akka-bench-jmh"  // we'd have to add a resolver to get the JMH dependency - ST 8/17/15
       ]
-      // TODO wip on this at https://github.com/scala/community-builds/pull/317
       extra.test-tasks: ["compile"]
+      // TODO: should run the tests of akka-actor, at least.
     }
 
     // frozen (December 2017) at December 2017 commit before akka-actor and akka-stream
@@ -220,8 +206,6 @@ build: {
 options.resolvers: {
   "R0000" : "local"
   "R0001" : "sbt-snapshots: file:///localhome/jenkinssbt/sbt-snapshots"
-# "R0001" : "sbt-snapshots: file:///home/cunei/activities/clones/sbt-standalone-build/sbt-snapshots"
   "R0002" : "proxy-ch-maven: https://proxy-ch.typesafe.com:8082/artifactory/repo"
   "R0003" : "proxy-ch-ivy: https://proxy-ch.typesafe.com:8082/artifactory/repo, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]"
-  "R0004" : "sbt-toni: https://dl.bintray.com/cunei/sbt-temp/"
 }
