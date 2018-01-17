@@ -36,6 +36,7 @@ vars.uris: {
   circe-uri:                    "https://github.com/scalacommunitybuild/circe.git#community-build-2.12"  # was master
   circe-config-uri:             "https://github.com/circe/circe-config.git"
   scalaz-uri:                   "https://github.com/scalaz/scalaz.git#series/7.2.x"
+  twitter-util-uri:             "https://github.com/twitter/util.git#develop"
 }
 
 
@@ -161,6 +162,22 @@ build: {
         "org.typelevel#spire"
       ]
       check-missing: false
+    }
+
+    // tracking "develop" branch.
+    // try master instead if develop proves too fragile?
+    ${vars.base} {
+      name: "twitter-util"
+      uri:  ${vars.uris.twitter-util-uri}
+      extra.exclude: [
+        // this isn't really necessary and would pull in a JMH dependency
+        "util-benchmark"
+        // this is 2.11-only
+        "util-intellij"
+      ]
+      // recommended at https://github.com/twitter/util/issues/173:
+      // "We use that when we don't think the tests will be reliable in a ci environment"
+      extra.options: ["-DSKIP_FLAKY=true"]
     }
 
     ${vars.base} {
