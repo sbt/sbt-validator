@@ -52,7 +52,7 @@ then
 fi
 
 echo "dbuild-${DBUILDVERSION}/bin/dbuild" "${@}" "$DBUILDCONFIG"
-"dbuild-${DBUILDVERSION}/bin/dbuild" "${@}" "$DBUILDCONFIG" scalacheck 2>&1 | tee "dbuild-${DBUILDVERSION}/dbuild.out"
+"dbuild-${DBUILDVERSION}/bin/dbuild" "${@}" "$DBUILDCONFIG" 2>&1 | tee "dbuild-${DBUILDVERSION}/dbuild.out"
 STATUS="$?"
 BUILD_ID="$(grep '^\[info\]  uuid = ' "dbuild-${DBUILDVERSION}/dbuild.out" | sed -e 's/\[info\]  uuid = //')"
 echo "The repeatable UUID of this build was: ${BUILD_ID}"

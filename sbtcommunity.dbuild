@@ -85,7 +85,8 @@ build: {
     ${vars.util}    { name: sbt-util }
     ${vars.lib}     { name: sbt-librarymanagement }
     ${vars.zinc}    { name: sbt-zinc }
-    {
+
+    ${vars.base} {
       name: "sbtbintray"
       // compile using 0.13, but compile a plugin that matches ${FRESHSBTVERSION}
       uri: "https://github.com/sbt/sbt-bintray.git#"${vars.sbtbintray}
@@ -94,6 +95,7 @@ build: {
       extra.commands: [ "set scriptedLaunchOpts ++= Seq(\"-Dsbt.override.build.repos=true\", (\"-Dsbt.repository.config=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/repositories\"), (\"-Dsbt.ivy.home=\"+(baseDirectory.value.getAbsolutePath())+\"/.dbuild/ivy2\"))",
                         "set bintrayRelease in root := ((): Unit)",
                         "set sbtVersion in pluginCrossBuild := \""${FRESHSBTVERSION}"\"" ]
+      extra.sbt-version: "0.13.16"
     }
 
 // Other projects, already ported to 1.x
@@ -143,11 +145,11 @@ build: {
       uri: ${vars.uris.scalariform-uri}
     }
 
-    ${vars.base} {
-      name: "scalaz"
-      uri:  ${vars.uris.scalaz-uri}
-      extra.projects: ["rootJVM"]  // no Scala.js please
-    }
+//    ${vars.base} {
+//      name: "scalaz"
+//      uri:  ${vars.uris.scalaz-uri}
+//      extra.projects: ["rootJVM"]  // no Scala.js please
+//    }
 
     ${vars.base} {
       name: "breeze"
@@ -247,12 +249,12 @@ build: {
     // 3.5 is the current stable branch (as of Oct 2016)
     // there is also a brand-new development branch, 3.6, we should
     // maybe switch to at some point
-    ${vars.base} {
-      name: "json4s"
-      uri:  ${vars.uris.json4s-uri}
-      // TODO: exclude subprojects we don't want, rather than naming a few we want. probably adding more would work?
-      extra.projects: ["json4s-native", "json4s-jackson", "json4s-ast"]
-    }
+//    ${vars.base} {
+//      name: "json4s"
+//      uri:  ${vars.uris.json4s-uri}
+//      // TODO: exclude subprojects we don't want, rather than naming a few we want. probably adding more would work?
+//      extra.projects: ["json4s-native", "json4s-jackson", "json4s-ast"]
+//    }
 
 //    ${vars.base} {
 //      name: "circe"
