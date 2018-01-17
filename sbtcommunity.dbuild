@@ -37,6 +37,7 @@ vars.uris: {
   circe-config-uri:             "https://github.com/circe/circe-config.git"
   scalaz-uri:                   "https://github.com/scalaz/scalaz.git#series/7.2.x"
   twitter-util-uri:             "https://github.com/twitter/util.git#develop"
+  scalacheck-uri:               "https://github.com/rickynils/scalacheck.git"
 }
 
 
@@ -223,6 +224,16 @@ build: {
       name: "scalalib"
       uri:  ${vars.uris.scalalib-uri}
       extra.sbt-version: ${vars.sbt-1-version}
+    }
+
+    ${vars.base} {
+      name: "scalacheck"
+      uri:  ${vars.uris.scalacheck-uri}
+      extra.projects: ["jvm"]  // no Scala.js please
+      extra.commands: ${vars.default-commands} [
+        // because of new unused warnings in 2.12.2
+        "removeScalacOptions -Xfatal-warnings"
+      ]
     }
 
     ${vars.base} {
