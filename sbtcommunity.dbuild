@@ -31,6 +31,7 @@ vars.uris: {
   cats-effect-uri:              "https://github.com/typelevel/cats-effect.git#542290e22"  # was master
   scalalib-uri:                 "https://github.com/ornicar/scalalib.git"
   scalachess-uri:               "https://github.com/ornicar/scalachess.git#a1c8abe1e0"  # was master
+  json4s-uri:                   "https://github.com/json4s/json4s.git#3.5"
   akka-http-cors-uri:           "https://github.com/lomigmegard/akka-http-cors.git"
   akka-http-session-uri:        "https://github.com/softwaremill/akka-http-session.git"
   circe-uri:                    "https://github.com/scalacommunitybuild/circe.git#community-build-2.12"  # was master
@@ -250,6 +251,16 @@ build: {
       uri:  ${vars.uris.akka-http-session-uri}
       extra.sbt-version: ${vars.sbt-1-version}
       extra.projects: ["core"]
+    }
+
+    // 3.5 is the current stable branch (as of Oct 2016)
+    // there is also a brand-new development branch, 3.6, we should
+    // maybe switch to at some point
+    ${vars.base} {
+      name: "json4s"
+      uri:  ${vars.uris.json4s-uri}
+      // TODO: exclude subprojects we don't want, rather than naming a few we want. probably adding more would work?
+      extra.projects: ["json4s-native", "json4s-jackson", "json4s-ast"]
     }
 
 //    ${vars.base} {
