@@ -35,6 +35,7 @@ vars.uris: {
   akka-http-session-uri:        "https://github.com/softwaremill/akka-http-session.git"
   circe-uri:                    "https://github.com/scalacommunitybuild/circe.git#community-build-2.12"  # was master
   circe-config-uri:             "https://github.com/circe/circe-config.git"
+  scalaz-uri:                   "https://github.com/scalaz/scalaz.git#series/7.2.x"
 }
 
 
@@ -139,6 +140,12 @@ build: {
       name: "scalariform"
       uri: ${vars.uris.scalariform-uri}
       extra.sbt-version: ${vars.sbt-1-version}
+    }
+
+    ${vars.base} {
+      name: "scalaz"
+      uri:  ${vars.uris.scalaz-uri}
+      extra.projects: ["rootJVM"]  // no Scala.js please
     }
 
     ${vars.base} {
