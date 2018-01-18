@@ -26,7 +26,7 @@ vars.uris: {
   akka-stuff-uri:               "https://github.com/akka/akka.git"
   akka-http-uri:                "https://github.com/akka/akka-http.git#bc849bb03"  # was master
   scalariform-uri:              "https://github.com/scala-ide/scalariform.git"
-  breeze-uri:                   "https://github.com/scalanlp/breeze.git"
+  breeze-uri:                   "https://github.com/scalanlp/breeze.git#47fd73254680cf924e0ef001e9476e00a9b1b35c" // master is broken (2018-01-18)
   lightbend-emoji-uri:          "https://github.com/lightbend/lightbend-emoji.git"
   cats-effect-uri:              "https://github.com/typelevel/cats-effect.git#542290e22"  # was master
   scalalib-uri:                 "https://github.com/ornicar/scalalib.git"
