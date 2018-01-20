@@ -34,7 +34,7 @@ vars.uris: {
   json4s-uri:                   "https://github.com/json4s/json4s.git#3.5"
   akka-http-cors-uri:           "https://github.com/lomigmegard/akka-http-cors.git"
   akka-http-session-uri:        "https://github.com/softwaremill/akka-http-session.git"
-  circe-uri:                    "https://github.com/circe/circe.git"
+  circe-uri:                    "https://github.com/cunei/circe.git#disable-coursier"
   circe-config-uri:             "https://github.com/circe/circe-config.git"
   scalaz-uri:                   "https://github.com/scalaz/scalaz.git#series/7.3.x"
   twitter-util-uri:             "https://github.com/twitter/util.git#develop"
