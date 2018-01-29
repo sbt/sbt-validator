@@ -29,6 +29,7 @@ vars.uris: {
   breeze-uri:                   "https://github.com/scalanlp/breeze.git#47fd73254680cf924e0ef001e9476e00a9b1b35c" // master is broken (2018-01-18)
   lightbend-emoji-uri:          "https://github.com/lightbend/lightbend-emoji.git"
   cats-effect-uri:              "https://github.com/typelevel/cats-effect.git#542290e22"  # was master
+  cats-uri:                     "https://github.com/typelevel/cats.git#master"
   scalalib-uri:                 "https://github.com/ornicar/scalalib.git"
   scalachess-uri:               "https://github.com/ornicar/scalachess.git#a1c8abe1e0"  # was master
   json4s-uri:                   "https://github.com/json4s/json4s.git#3.5"
@@ -194,6 +195,20 @@ build: {
       name: "cats-effect"
       uri:  ${vars.uris.cats-effect-uri}
       extra.projects: ["coreJVM", "lawsJVM"]  // no Scala.js plz
+    }
+
+    ${vars.base} {
+      name: "cats"
+      uri:  ${vars.uris.cats-uri}
+      // for some reason, adding the umbrella "catsJVM" project but excluding "bench"
+      // and "docs" doesn't succeed in removing the depending on cats-bench.
+      // using deps.ignore doesn't fix it either. not sure how else to fix it
+      // other than just enumerating what we want:
+      extra.projects: ["coreJVM", "freeJVM", "kernelJVM", "kernelLawsJVM", "lawsJVM", "macrosJVM", "testsJVM"]
+      extra.commands: ${vars.default-commands} [
+        // too fragile
+        "removeScalacOptions -Xfatal-warnings"
+      ]
     }
 
 //
