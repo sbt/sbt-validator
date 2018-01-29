@@ -40,6 +40,9 @@ vars.uris: {
   scalaz-uri:                   "https://github.com/scalaz/scalaz.git#series/7.3.x"
   twitter-util-uri:             "https://github.com/twitter/util.git#develop"
   scalacheck-uri:               "https://github.com/rickynils/scalacheck.git"
+                                // must be moved back to coursier/coursier master once
+                                // https://github.com/coursier/coursier/pull/738 is updated to 1.1.1
+  coursier-uri:                 "https://github.com/cunei/coursier.git#wip-sbt110"
 }
 
 
@@ -290,6 +293,20 @@ build: {
       ]
     }
 
+    ${vars.base} {
+      name: "coursier"
+      uri:  ${vars.uris.coursier-uri}
+      extra.projects: ["jvm"]  // no Scala.js plz
+      extra.exclude: [
+        // no sbt plz
+        "sbt-coursier", "sbt-shading", "sbt-pgp-coursier", "sbt-plugins", "sbt-shared"
+      ]
+      extra.commands: ${vars.default-commands} [
+        // dbuild doesn't retrieve submodules unless we make it
+        "eval sys.process.Process(\"git submodule update --init\").!"
+      ]
+    }
+
   ]
 }
 
@@ -298,5 +315,6 @@ options.resolvers: {
   "R0001" : "sbt-snapshots: file:///localhome/jenkinssbt/sbt-snapshots"
   "R0002" : "proxy-ch-maven: https://proxy-ch.typesafe.com:8082/artifactory/repo"
   "R0003" : "proxy-ch-ivy: https://proxy-ch.typesafe.com:8082/artifactory/repo, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]"
-  "R0004" : "test-dbuild: file:///localhome/jenkinssbt/here, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]"
+  "R0004" : "tpolecat: https://dl.bintray.com/tpolecat/maven"
+  "R0005" : "test-dbuild: file:///localhome/jenkinssbt/here, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]"
 }
