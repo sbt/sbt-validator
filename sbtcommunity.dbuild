@@ -43,6 +43,7 @@ vars.uris: {
                                 // must be moved back to coursier/coursier master once
                                 // https://github.com/coursier/coursier/pull/738 is updated to 1.1.1
   coursier-uri:                 "https://github.com/cunei/coursier.git#wip-sbt110"
+  elastic4s-uri:                "https://github.com/sksamuel/elastic4s.git#master"
 }
 
 
@@ -307,6 +308,15 @@ build: {
       ]
     }
 
+    ${vars.base} {
+      name: "elastic4s"
+      uri:  ${vars.uris.elastic4s-uri}
+   //   extra.projects: ["elastic4s-core", "elastic4s-embedded"]
+      // some test code uses scala.util.parsing.json, which no longer
+      // exists in the latest scala-parser-combinators
+      extra.run-tests: false
+    }
+
   ]
 }
 
@@ -317,4 +327,5 @@ options.resolvers: {
   "R0003" : "proxy-ch-ivy: https://proxy-ch.typesafe.com:8082/artifactory/repo, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]"
   "R0004" : "tpolecat: https://dl.bintray.com/tpolecat/maven"
   "R0005" : "test-dbuild: file:///localhome/jenkinssbt/here, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]"
+  "R0006" : "elasticsearch-releases: https://artifacts.elastic.co/maven"
 }
