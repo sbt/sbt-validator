@@ -81,7 +81,7 @@ build: {
   space.from: default
   space.to: ""
   extraction-version: ${vars.scala212-version}
-  sbt-java-options: "-Dsbt.gigahorse=false"
+  sbt-java-options: [ "-Dsbt.gigahorse=false", "-XX:ReservedCodeCacheSize=480M" ]
   sbt-version: ${vars.sbt-1-version}
 
   projects: [
@@ -108,7 +108,7 @@ build: {
     ${vars.base} {
       name: "akka-stuff"
       uri:  ${vars.uris.akka-stuff-uri}
-      extra.options: ["-Dakka.genjavadoc.enabled=false", "-Dakka.scaladoc.diagrams=false", "-Dakka.build.aggregateSamples=false"]
+      extra.options: ["-Dakka.genjavadoc.enabled=false", "-Dakka.scaladoc.diagrams=false", "-Dakka.build.aggregateSamples=false", "-XX:ReservedCodeCacheSize=480M"]
       extra.projects: ["akka-actor", "akka-scala-nightly"]
       extra.commands: ${vars.default-commands} [
         // https://github.com/scala/community-builds/issues/373
