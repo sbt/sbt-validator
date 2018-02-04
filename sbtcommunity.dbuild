@@ -325,7 +325,5 @@ options.resolvers: {
   "R0001" : "sbt-snapshots: file:///localhome/jenkinssbt/sbt-snapshots"
   "R0002" : "proxy-ch-maven: https://proxy-ch.typesafe.com:8082/artifactory/repo"
   "R0003" : "proxy-ch-ivy: https://proxy-ch.typesafe.com:8082/artifactory/repo, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]"
-  "R0004" : "tpolecat: https://dl.bintray.com/tpolecat/maven"
   "R0005" : "test-dbuild: file:///localhome/jenkinssbt/here, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]"
-  "R0006" : "elasticsearch-releases: https://artifacts.elastic.co/maven"
 }
