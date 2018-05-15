@@ -28,7 +28,7 @@ vars.uris: {
   scalariform-uri:              "https://github.com/scala-ide/scalariform.git"
   breeze-uri:                   "https://github.com/scalanlp/breeze.git#47fd73254680cf924e0ef001e9476e00a9b1b35c" // master is broken (2018-01-18)
   lightbend-emoji-uri:          "https://github.com/lightbend/lightbend-emoji.git"
-  cats-effect-uri:              "https://github.com/typelevel/cats-effect.git#542290e22"  # was master
+  cats-effect-uri:              "https://github.com/typelevel/cats-effect.git#v0.10"  # was master
   cats-uri:                     "https://github.com/typelevel/cats.git#master"
   scalalib-uri:                 "https://github.com/ornicar/scalalib.git"
   scalachess-uri:               "https://github.com/ornicar/scalachess.git#a1c8abe1e0"  # was master
