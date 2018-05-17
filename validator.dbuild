@@ -35,7 +35,10 @@ vars: {
 #  artifactoryDeployUri: "https://proxy-ch.typesafe.com:8082/artifactory/sbt-snapshots"
 #  artifactoryDeployCredentials: "/home/jenkinssbt/...../.credentials"
 
-  localDeployUri: "file:///localhome/jenkinssbt/sbt-snapshots"
+  localDeploy: {
+    uri: "ssh://a1/localhome/jenkinssbt/sbt-snapshots"
+    credentials: "localCredentials.txt"
+  }
 }
 
 include file("sbt.conf")
