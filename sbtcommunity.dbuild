@@ -280,11 +280,11 @@ build: {
       uri:  ${vars.uris.circe-uri}
       extra.projects: [
         // easy
-        "core", "numbers"
+        "coreJVM", "numbersJVM"
         // harder
         "jawn"
         // bunch more stuff that all depends on jawn
-        "parser", "generic", "literal", "scodec", "testing", "tests"
+        "parserJVM", "genericJVM", "literalJVM", "scodecJVM", "testingJVM", "testsJVM"
       ]
     }
 
