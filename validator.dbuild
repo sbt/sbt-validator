@@ -1,13 +1,4 @@
-//These commented lines below are inserted by the sbt validator as needed.
 //See: https://jenkins.scala-sbt.org:8592/job/sbt%20validator/
-//
-//include file("212.conf")
-//include file("211.conf")
-//include file("210.conf")
-//options.deploy: []
-//options.deploy: [ ${?vars.localDeploy212}, ${?vars.localDeploy211}, ${?vars.localDeploy210} ] ${options.deploy}
-//options.deploy: [ ${?vars.bintrayDeploy212}, ${?vars.bintrayDeploy211}, ${?vars.bintrayDeploy210} ]  ${options.deploy}
-//options.deploy: [ ${?vars.artifactoryDeploy212}, ${?vars.artifactoryDeploy211}, ${?vars.artifactoryDeploy210} ]  ${options.deploy}
 
 vars: {
   // propagate resolvers to the scripted tests
@@ -27,23 +18,19 @@ vars: {
   versionSuffix: "bin-"${TIMESTAMP}
 //  sbtBuilderVersion: "1.0.4" // Not all sbt modules have been upgraded to 1.0.2 (needed for the Gigahorse flag)
   sbtBuilderVersion: "standard" // use whatever sbt version is used by each project
-
-  bintrayDeployUri: "bintray:/sbt/maven-snapshots/jenkins-sbt/"${TIMESTAMP}"#release"
-  bintrayDeployCredentials: "/home/jenkinssbt/.bintray/.credentials"
-
-# Currently not deploying to Artifactory
-#  artifactoryDeployUri: "https://proxy-ch.typesafe.com:8082/artifactory/sbt-snapshots"
-#  artifactoryDeployCredentials: "/home/jenkinssbt/...../.credentials"
-
-  localDeploy: {
-    uri: "ssh://a1/localhome/jenkinssbt/sbt-snapshots"
-    credentials: "localCredentials.txt"
-  }
 }
 
 include file("sbt.conf")
+include file("all.conf")
 
-build: [ ${?vars.sbtBuild212}, ${?vars.sbtBuild211}, ${?vars.sbtBuild210} ]
+build: ${vars.projectsAll}
+
+//(for testing only}
+//options.deploy: [{
+//  projects: ${vars.deployProjectsAll}
+//  uri: "file:/home/cunei/sbt-snapshots"
+//}]
+
 
 options.resolvers: {
   "R0000" : "local"
