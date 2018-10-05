@@ -81,7 +81,7 @@ build: {
   space.from: default
   space.to: ""
   extraction-version: ${vars.scala212-version}
-  sbt-java-options: [ "-Dsbt.gigahorse=false", "-XX:ReservedCodeCacheSize=480M" ]
+  sbt-java-options: [ "-Dsbt.gigahorse=false", "-Dsbt.build.fatal=false", "-XX:ReservedCodeCacheSize=480M" ]
   sbt-version: ${vars.sbt-1-version}
 
   projects: [
