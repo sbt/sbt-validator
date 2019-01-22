@@ -1,8 +1,8 @@
 vars: {
   scala212-bin-version: "2.12"
-  scala212-version: ${vars.scala212-bin-version}".3"
+  scala212-version: ${vars.scala212-bin-version}".8"
   scala212-xml-version: "1.0.6"
-  scala212-par-comb-version: "1.0.5"
+  scala212-par-comb-version: "1.0.7"
 
   // We test these branches/commits.
   // All projects are built independently
@@ -24,26 +24,26 @@ vars.base.deps.inject: [] // ["com.lightbend#cloc-plugin"]
 
 vars.uris: {
   akka-stuff-uri:               "https://github.com/akka/akka.git"
-  akka-http-uri:                "https://github.com/akka/akka-http.git#bc849bb03"  # was master
+  akka-http-uri:                "https://github.com/akka/akka-http.git" // #bc849bb03"  # was master
   scalariform-uri:              "https://github.com/scala-ide/scalariform.git"
-  breeze-uri:                   "https://github.com/scalanlp/breeze.git#47fd73254680cf924e0ef001e9476e00a9b1b35c" // master is broken (2018-01-18)
+  breeze-uri:                   "https://github.com/SethTisue/breeze.git#sbt-api-mappings-version-bump"  # was scalanlp, master
   lightbend-emoji-uri:          "https://github.com/lightbend/lightbend-emoji.git"
-  cats-effect-uri:              "https://github.com/typelevel/cats-effect.git#v0.10"  # was master
-  cats-uri:                     "https://github.com/typelevel/cats.git#master"
+  cats-effect-uri:              "https://github.com/typelevel/cats-effect.git#v1.1.0" // #v0.10"  # was master
+  cats-uri:                     "https://github.com/typelevel/cats.git#v1.5.0" // #master"
   scalalib-uri:                 "https://github.com/ornicar/scalalib.git"
-  scalachess-uri:               "https://github.com/ornicar/scalachess.git#a1c8abe1e0"  # was master
+  scalachess-uri:               "https://github.com/ornicar/scalachess.git" // #a1c8abe1e0"  # was master
   json4s-uri:                   "https://github.com/json4s/json4s.git#3.5"
   akka-http-cors-uri:           "https://github.com/lomigmegard/akka-http-cors.git"
   akka-http-session-uri:        "https://github.com/softwaremill/akka-http-session.git"
   circe-uri:                    "https://github.com/circe/circe.git"
   circe-config-uri:             "https://github.com/circe/circe-config.git"
   scalaz-uri:                   "https://github.com/scalaz/scalaz.git#series/7.3.x"
-  twitter-util-uri:             "https://github.com/twitter/util.git#develop"
+  twitter-util-uri:             "https://github.com/twitter/util.git#ce41d10ef2cd72d25" // #develop"
   scalacheck-uri:               "https://github.com/rickynils/scalacheck.git"
                                 // must be moved back to coursier/coursier master once
                                 // https://github.com/coursier/coursier/pull/738 is updated to 1.1.1
-  coursier-uri:                 "https://github.com/cunei/coursier.git#wip-sbt110"
-  elastic4s-uri:                "https://github.com/sksamuel/elastic4s.git#master"
+  coursier-uri:                 "https://github.com/coursier/coursier.git#dbaf748fada"
+  elastic4s-uri:                "https://github.com/sksamuel/elastic4s.git#release/5.4.x" // #master"
 }
 
 
@@ -122,9 +122,6 @@ build: {
       // TODO: should run the tests of akka-actor, at least.
     }
 
-    // frozen (December 2017) at December 2017 commit before akka-actor and akka-stream
-    // dependencies were declared as "provided".  that means every downstream project
-    // needs updating. for now let's just freeze
     ${vars.base} {
       name: "akka-http"
       uri:  ${vars.uris.akka-http-uri}
@@ -133,15 +130,16 @@ build: {
         "-Dakka.genjavadoc.enabled=false", "-Dakka.scaladoc.diagrams=false"
         "-Dbintray.user=dummy", "-Dbintray.pass=dummy"
       ]
-      // Scaladoc generation failure reported upstream at https://github.com/akka/akka/issues/21543
       extra.commands: ${vars.default-commands} [
-        "set sources in doc in Compile in httpCore := List()"
         "set every bintrayReleaseOnPublish := false"
-        // sbt-osgi doesn't like dbuild-mangled version numbers
-        "set every OsgiKeys.bundleVersion := \"10.0.0\""
+        // Scaladoc generation failure reported upstream at https://github.com/akka/akka/issues/21543
+        "set sources in doc in Compile in httpCore := List()"
       ]
       // "HTTP is sadly very timing sensitive we're working on improving its stability regularly,
       // OK to disable it for now." - Konrad M, October 2016
+      // reconfirmed January 2018 that some tests are failing. in one run, it was:
+      // * akka.http.impl.engine.client.NewConnectionPoolSpec
+      // * akka.http.impl.engine.client.HostConnectionPoolSpec
       extra.test-tasks: ["compile"]
     }
 
@@ -297,28 +295,29 @@ build: {
       ]
     }
 
-    ${vars.base} {
-      name: "coursier"
-      uri:  ${vars.uris.coursier-uri}
-      extra.projects: ["jvm"]  // no Scala.js plz
-      extra.exclude: [
-        // no sbt plz
-        "sbt-coursier", "sbt-shading", "sbt-pgp-coursier", "sbt-plugins", "sbt-shared"
-      ]
-      extra.commands: ${vars.default-commands} [
-        // dbuild doesn't retrieve submodules unless we make it
-        "eval sys.process.Process(\"git submodule update --init\").!"
-      ]
-    }
+  // frozen (October 2018) at an October 2018 commit just before source-incompatible
+  // changes which broke coursier-small and classpath-shrinker downstream.
+  // note that https://github.com/coursier/coursier/pull/937 (October 2018) adds build-on-JDK-11
+  // support, so we'll need to unfreeze at some point in order to get that
+  ${vars.base} {
+    name: "coursier"
+    uri:  ${vars.uris.coursier-uri}
+    // no Scala.js or Scala Native plz
+    extra.projects: ["jvm"]
+    // these depend on Scala Native
+    extra.exclude: ["extra", "cli"]
+  }
 
-    ${vars.base} {
-      name: "elastic4s"
-      uri:  ${vars.uris.elastic4s-uri}
+
+// elastic4s has not been ported to sbt >0.13, as of 2019-01-19
+//    ${vars.base} {
+//      name: "elastic4s"
+//      uri:  ${vars.uris.elastic4s-uri}
    //   extra.projects: ["elastic4s-core", "elastic4s-embedded"]
-      // some test code uses scala.util.parsing.json, which no longer
-      // exists in the latest scala-parser-combinators
-      extra.run-tests: false
-    }
+//      // some test code uses scala.util.parsing.json, which no longer
+//      // exists in the latest scala-parser-combinators
+//      extra.run-tests: false
+//    }
 
   ]
 }
