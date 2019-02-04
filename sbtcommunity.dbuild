@@ -44,6 +44,7 @@ vars.uris: {
                                 // https://github.com/coursier/coursier/pull/738 is updated to 1.1.1
   coursier-uri:                 "https://github.com/coursier/coursier.git#dbaf748fada"
   elastic4s-uri:                "https://github.com/sksamuel/elastic4s.git#release/5.4.x" // #master"
+  swoval-uri:                   "https://github.com/swoval/swoval.git"
 }
 
 
@@ -320,6 +321,13 @@ build: {
 //    }
 
   ]
+
+  ${vars.base} {
+    name: "swoval"
+    uri:  ${vars.uris.swoval-uri}
+    // only test jvm projects
+    extra.projects: ["filesJVM", "testingJVM", "plugin"]
+  }
 }
 
 options.resolvers: {
