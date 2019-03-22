@@ -288,7 +288,7 @@ build: {
     }
 
     ${vars.base} {
-      name: "circe-config"   
+      name: "circe-config"
       uri:  ${vars.uris.circe-config-uri}
       extra.commands: ${vars.default-commands} [
         // too fragile
@@ -309,6 +309,14 @@ build: {
     extra.exclude: ["extra", "cli"]
   }
 
+  ${vars.base} {
+    name: "swoval"
+    uri:  ${vars.uris.swoval-uri}
+    // only test jvm projects
+    extra.projects: ["filesJVM", "testingJVM", "plugin"]
+  }
+
+// ^^ add new projects above here ^^
 
 // elastic4s has not been ported to sbt >0.13, as of 2019-01-19
 //    ${vars.base} {
@@ -321,13 +329,7 @@ build: {
 //    }
 
   ]
-
-  ${vars.base} {
-    name: "swoval"
-    uri:  ${vars.uris.swoval-uri}
-    // only test jvm projects
-    extra.projects: ["filesJVM", "testingJVM", "plugin"]
-  }
+  // end of projects
 }
 
 options.resolvers: {
