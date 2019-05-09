@@ -5,7 +5,10 @@ pipeline {
   stages {
     stage('Test') {
       steps {
+        sh 'mkdir -p /root'
+        sh 'export HOME=/root'
         sh 'env'
+        sh 'sbt about'
       }
     }
   }
