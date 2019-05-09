@@ -5,7 +5,7 @@ pipeline {
   stages {
     stage('Test') {
       steps {
-        sh 'sbt about'
+        sh 'env'
       }
     }
   }
