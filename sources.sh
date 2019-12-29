@@ -10,3 +10,6 @@ cd ../../proj/zinc/
 sbt -Dsbt.sbtbintray=false -Dsbt.build.localmaven=${LOCAL_MAVEN} -Dsbt.build.version=${BUILD_VERSION} -sbt-dir $WORKSPACE/.sbt -ivy $WORKSPACE/.ivy -no-colors clean publishLocal publish
 cd ../../proj/librarymanagement/
 sbt -Dsbt.sbtbintray=false -Dsbt.build.localmaven=${LOCAL_MAVEN} -Dsbt.build.version=${BUILD_VERSION} -sbt-dir $WORKSPACE/.sbt -ivy $WORKSPACE/.ivy -no-colors clean publishLocal publish
+cd ../../proj/sbt/
+sbt -Dsbt.sbtbintray=false -Dsbt.build.localmaven=${LOCAL_MAVEN} -Dsbt.build.version=${BUILD_VERSION} -sbt-dir $WORKSPACE/.sbt -ivy $WORKSPACE/.ivy -no-colors clean upperModules/publishLocal upperModules/publish
+cd ../../
