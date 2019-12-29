@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 export BUILD_VERSION="1.4.0-bin-${TIMESTAMP}"
 echo "The build version is: ${BUILD_VERSION}"
 cd proj/io
