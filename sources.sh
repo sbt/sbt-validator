@@ -31,7 +31,7 @@ sbt -Dsbt.sbtbintray=false -Dsbt.build.localmaven=${LOCAL_MAVEN} -Dsbt.build.ver
 cd ../../proj/sbt/
 sbt -Dsbt.sbtbintray=false -Dsbt.build.localmaven=${LOCAL_MAVEN} -Dsbt.build.version=${BUILD_VERSION} -sbt-dir $WORKSPACE/.sbt -ivy $WORKSPACE/.ivy \
   clean "set ThisBuild/version := \"1.4.0-SNAPSHOT\"" \
-  "mainSettingsProj/test ;safeUnitTests ;otherUnitTests;" \
+  "publishLocal; mainSettingsProj/test ;safeUnitTests ;otherUnitTests;" \
   "scripted"
 sbt -Dsbt.sbtbintray=false -Dsbt.build.localmaven=${LOCAL_MAVEN} -Dsbt.build.version=${BUILD_VERSION} -sbt-dir $WORKSPACE/.sbt -ivy $WORKSPACE/.ivy \
   clean upperModules/publishLocal upperModules/publish
