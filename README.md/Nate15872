@@ -1,0 +1,569 @@
+# sbt-validator
+Builds sbt 1.0.x against recent versions of the sbt modules
+021-12-03 13:13.44: New job: test ocaml-ppx/ocamlformat https://github.com/ocaml-ppx/ocamlformat.git#refs/heads/fix-boxing-labelled-args (3c35e71577b239ffab81aeee8be2c863a2aa30da) (linux-x86_64:alpine-3.14-4.13)
+Base: ocaml/opam@sha256:6c5c4abe8c3a380b1de39563c0951dca27097a36e31f9c035a0780b33a85d876
+Opam project build
+
+To reproduce locally:
+
+git clone --recursive "https://github.com/ocaml-ppx/ocamlformat.git" -b "fix-boxing-labelled-args" && cd "ocamlformat" && git reset --hard 3c35e715
+cat > Dockerfile <<'END-OF-DOCKERFILE'
+FROM ocaml/opam@sha256:6c5c4abe8c3a380b1de39563c0951dca27097a36e31f9c035a0780b33a85d876
+# alpine-3.14-4.13
+USER 1000:1000
+WORKDIR /src
+RUN sudo chown opam /src
+RUN cd ~/opam-repository && (git cat-file -e 207e5f0919ce08eb408a4a911562da1494f5ac2c || git fetch origin master) && git reset -q --hard 207e5f0919ce08eb408a4a911562da1494f5ac2c && git log --no-decorate -n1 --oneline && opam update -u
+RUN mkdir -p './'
+COPY --chown=1000:1000 ocamlformat.opam ocamlformat-rpc.opam ocamlformat-rpc-lib.opam ./
+RUN opam pin add -yn ocamlformat.dev './' && \
+    opam pin add -yn ocamlformat-rpc.dev './' && \
+    opam pin add -yn ocamlformat-rpc-lib.dev './'
+ENV DEPS alcotest.1.5.0 astring.0.8.5 base.v0.14.2 base-bigarray.base base-bytes.base base-threads.base base-unix.base bisect_ppx.2.7.0 cmdliner.1.0.4 csexp.1.5.1 dune.2.9.1 dune-build-info.2.9.1 dune-configurator.2.9.1 fix.20211125 fmt.0.9.0 fpath.0.7.3 menhir.20211128 menhirLib.20211128 menhirSdk.20211128 ocaml.4.13.1 ocaml-base-compiler.4.13.1 ocaml-compiler-libs.v0.12.4 ocaml-config.2 ocaml-options-vanilla.1 ocaml-syntax-shims.1.0.0 ocaml-version.3.4.0 ocamlbuild.0.14.0 ocamlfind.1.9.1 ocp-indent.1.8.1 odoc-parser.0.9.0 ppx_derivers.1.2.1 ppxlib.0.23.0 re.1.10.3 result.1.5 seq.base sexplib0.v0.14.0 stdio.v0.14.0 stdlib-shims.0.3.0 topkg.1.0.4 uchar.0.0.2 uucp.14.0.0 uuseg.14.0.0 uutf.1.0.2
+RUN opam depext --update -y ocamlformat.dev ocamlformat-rpc.dev ocamlformat-rpc-lib.dev $DEPS
+RUN opam install $DEPS
+COPY --chown=1000:1000 . /src/
+RUN opam exec -- dune build @install @check @runtest && rm -rf _build
+
+END-OF-DOCKERFILE
+docker build .
+
+2021-12-03 13:13.44: Using cache hint "ocaml-ppx/ocamlformat-ocaml/opam@sha256:6c5c4abe8c3a380b1de39563c0951dca27097a36e31f9c035a0780b33a85d876-alpine-3.14-4.13-cf1885bff96a80618b234dc3760720f1"
+2021-12-03 13:13.44: Using OBuilder spec:
+((from ocaml/opam@sha256:6c5c4abe8c3a380b1de39563c0951dca27097a36e31f9c035a0780b33a85d876)
+ (comment alpine-3.14-4.13)
+ (user (uid 1000) (gid 1000))
+ (workdir /src)
+ (run (shell "sudo chown opam /src"))
+ (run (cache (opam-archives (target /home/opam/.opam/download-cache)))
+      (network host)
+      (shell "cd ~/opam-repository && (git cat-file -e 207e5f0919ce08eb408a4a911562da1494f5ac2c || git fetch origin master) && git reset -q --hard 207e5f0919ce08eb408a4a911562da1494f5ac2c && git log --no-decorate -n1 --oneline && opam update -u"))
+ (run (shell "mkdir -p './'"))
+ (copy (src ocamlformat.opam ocamlformat-rpc.opam ocamlformat-rpc-lib.opam)
+       (dst ./))
+ (run (network host)
+      (shell  "opam pin add -yn ocamlformat.dev './' && \
+             \nopam pin add -yn ocamlformat-rpc.dev './' && \
+             \nopam pin add -yn ocamlformat-rpc-lib.dev './'"))
+ (env DEPS "alcotest.1.5.0 astring.0.8.5 base.v0.14.2 base-bigarray.base base-bytes.base base-threads.base base-unix.base bisect_ppx.2.7.0 cmdliner.1.0.4 csexp.1.5.1 dune.2.9.1 dune-build-info.2.9.1 dune-configurator.2.9.1 fix.20211125 fmt.0.9.0 fpath.0.7.3 menhir.20211128 menhirLib.20211128 menhirSdk.20211128 ocaml.4.13.1 ocaml-base-compiler.4.13.1 ocaml-compiler-libs.v0.12.4 ocaml-config.2 ocaml-options-vanilla.1 ocaml-syntax-shims.1.0.0 ocaml-version.3.4.0 ocamlbuild.0.14.0 ocamlfind.1.9.1 ocp-indent.1.8.1 odoc-parser.0.9.0 ppx_derivers.1.2.1 ppxlib.0.23.0 re.1.10.3 result.1.5 seq.base sexplib0.v0.14.0 stdio.v0.14.0 stdlib-shims.0.3.0 topkg.1.0.4 uchar.0.0.2 uucp.14.0.0 uuseg.14.0.0 uutf.1.0.2")
+ (run (cache (opam-archives (target /home/opam/.opam/download-cache)))
+      (network host)
+      (shell "opam depext --update -y ocamlformat.dev ocamlformat-rpc.dev ocamlformat-rpc-lib.dev $DEPS"))
+ (run (cache (opam-archives (target /home/opam/.opam/download-cache)))
+      (network host)
+      (shell "opam install $DEPS"))
+ (copy (src .) (dst /src/))
+ (run (shell "opam exec -- dune build @install @check @runtest && rm -rf _build"))
+)
+
+2021-12-03 13:13.44: Waiting for resource in pool OCluster
+2021-12-03 13:26.42: Waiting for worker...
+2021-12-03 13:26.50: Got resource from pool OCluster
+Building on x86-bm-12.ocamllabs.io
+All commits already cached
+HEAD is now at 3c35e715 indent comments
+
+(from ocaml/opam@sha256:6c5c4abe8c3a380b1de39563c0951dca27097a36e31f9c035a0780b33a85d876)
+2021-12-03 13:26.50 ---> using "da36f8e5a8f6de147d6f7a798e48f86f508663183db4f8135b072b55a371e313" from cache
+
+/: (comment alpine-3.14-4.13)
+
+/: (user (uid 1000) (gid 1000))
+
+/: (workdir /src)
+
+/src: (run (shell "sudo chown opam /src"))
+2021-12-03 13:26.50 ---> using "06f1c65239559e0c24a93fe46f7e58e55c1406cf574c317c69c586f2c24d2bc0" from cache
+
+/src: (run (cache (opam-archives (target /home/opam/.opam/download-cache)))
+           (network host)
+           (shell "cd ~/opam-repository && (git cat-file -e 207e5f0919ce08eb408a4a911562da1494f5ac2c || git fetch origin master) && git reset -q --hard 207e5f0919ce08eb408a4a911562da1494f5ac2c && git log --no-decorate -n1 --oneline && opam update -u"))
+207e5f0919 3 packages from gitlab.inria.fr/fpottier/menhir/-/archive/20211128/archive.tar.gz
+
+<><> Updating package repositories ><><><><><><><><><><><><><><><><><><><><><><>
+[default] synchronised from file:///home/opam/opam-repository
+
+Everything as up-to-date as possible (run with --verbose to show unavailable upgrades).
+However, you may "opam upgrade" these packages explicitly, which will ask permission to downgrade or uninstall the conflicting packages.
+Nothing to do.
+# Run eval $(opam env) to update the current shell environment
+2021-12-03 13:28.53 ---> saved as "286213a1eaeedf24e5b5d9b28269ba8594d0d1b808ebac52bdbb363626400b01"
+
+/src: (run (shell "mkdir -p './'"))
+2021-12-03 13:28.54 ---> saved as "891ad1620689f95429079d4eaa45388b51d829621d80d7a796eb1ea6c5d1da5e"
+
+/src: (copy (src ocamlformat.opam ocamlformat-rpc.opam ocamlformat-rpc-lib.opam)
+            (dst ./))
+2021-12-03 13:28.55 ---> saved as "1d3a1cc1c0c9040b0dc224207324b1c77f4f508449c2a2a4a0c57a7b529e0132"
+
+/src: (run (network host)
+           (shell  "opam pin add -yn ocamlformat.dev './' && \
+                  \nopam pin add -yn ocamlformat-rpc.dev './' && \
+                  \nopam pin add -yn ocamlformat-rpc-lib.dev './'"))
+[ocamlformat.dev: rsync]
+[ocamlformat.dev] synchronised from file:///src
+ocamlformat is now pinned to file:///src (version dev)
+[ocamlformat-rpc.dev: rsync]
+[ocamlformat-rpc.dev] synchronised from file:///src
+ocamlformat-rpc is now pinned to file:///src (version dev)
+[ocamlformat-rpc-lib.dev: rsync]
+[ocamlformat-rpc-lib.dev] synchronised from file:///src
+ocamlformat-rpc-lib is now pinned to file:///src (version dev)
+2021-12-03 13:29.15 ---> saved as "a2910261175435d38a53864ca2035177de4da0bb00c8f59b4ada4aa05d9c6cc5"
+
+/src: (env DEPS "alcotest.1.5.0 astring.0.8.5 base.v0.14.2 base-bigarray.base base-bytes.base base-threads.base base-unix.base bisect_ppx.2.7.0 cmdliner.1.0.4 csexp.1.5.1 dune.2.9.1 dune-build-info.2.9.1 dune-configurator.2.9.1 fix.20211125 fmt.0.9.0 fpath.0.7.3 menhir.20211128 menhirLib.20211128 menhirSdk.20211128 ocaml.4.13.1 ocaml-base-compiler.4.13.1 ocaml-compiler-libs.v0.12.4 ocaml-config.2 ocaml-options-vanilla.1 ocaml-syntax-shims.1.0.0 ocaml-version.3.4.0 ocamlbuild.0.14.0 ocamlfind.1.9.1 ocp-indent.1.8.1 odoc-parser.0.9.0 ppx_derivers.1.2.1 ppxlib.0.23.0 re.1.10.3 result.1.5 seq.base sexplib0.v0.14.0 stdio.v0.14.0 stdlib-shims.0.3.0 topkg.1.0.4 uchar.0.0.2 uucp.14.0.0 uuseg.14.0.0 uutf.1.0.2")
+
+/src: (run (cache (opam-archives (target /home/opam/.opam/download-cache)))
+           (network host)
+           (shell "opam depext --update -y ocamlformat.dev ocamlformat-rpc.dev ocamlformat-rpc-lib.dev $DEPS"))
+# Detecting depexts using vars: arch=x86_64, os=linux, os-distribution=alpine, os-family=alpine
+# No extra OS packages requirements found.
+2021-12-03 13:29.37 ---> saved as "2c5493b5b88b3ed7e17f9494ae7b6c7e24085de0567130032c3c4cd4d1748cf6"
+
+/src: (run (cache (opam-archives (target /home/opam/.opam/download-cache)))
+           (network host)
+           (shell "opam install $DEPS"))
+[NOTE] Package ocaml-options-vanilla is already installed (current version is 1).
+[NOTE] Package ocaml-config is already installed (current version is 2).
+[NOTE] Package ocaml-base-compiler is already installed (current version is 4.13.1).
+[NOTE] Package ocaml is already installed (current version is 4.13.1).
+[NOTE] Package base-unix is already installed (current version is base).
+[NOTE] Package base-threads is already installed (current version is base).
+[NOTE] Package base-bigarray is already installed (current version is base).
+The following actions will be performed:
+  - install seq                 base
+  - install ocamlbuild          0.14.0
+  - install ocamlfind           1.9.1
+  - install cmdliner            1.0.4
+  - install dune                2.9.1
+  - install uchar               0.0.2
+  - install topkg               1.0.4
+  - install base-bytes          base
+  - install stdlib-shims        0.3.0
+  - install sexplib0            v0.14.0
+  - install result              1.5
+  - install re                  1.10.3
+  - install ppx_derivers        1.2.1
+  - install ocaml-version       3.4.0
+  - install ocaml-syntax-shims  1.0.0
+  - install ocaml-compiler-libs v0.12.4
+  - install menhirSdk           20211128
+  - install menhirLib           20211128
+  - install fix                 20211125
+  - install dune-build-info     2.9.1
+  - install csexp               1.5.1
+  - install uutf                1.0.2
+  - install fmt                 0.9.0
+  - install astring             0.8.5
+  - install ocp-indent          1.8.1
+  - install ppxlib              0.23.0
+  - install menhir              20211128
+  - install dune-configurator   2.9.1
+  - install uucp                14.0.0
+  - install odoc-parser         0.9.0
+  - install fpath               0.7.3
+  - install alcotest            1.5.0
+  - install bisect_ppx          2.7.0
+  - install base                v0.14.2
+  - install uuseg               14.0.0
+  - install stdio               v0.14.0
+===== 36 to install =====
+
+<><> Gathering sources ><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+[alcotest.1.5.0] found in cache
+[astring.0.8.5] found in cache
+[base.v0.14.2] found in cache
+[bisect_ppx.2.7.0] found in cache
+[cmdliner.1.0.4] found in cache
+[csexp.1.5.1] found in cache
+[dune.2.9.1] found in cache
+[dune-build-info.2.9.1] found in cache
+[dune-configurator.2.9.1] found in cache
+[fix.20211125] found in cache
+[fmt.0.9.0] found in cache
+[fpath.0.7.3] found in cache
+[menhir.20211128] downloaded from https://gitlab.inria.fr/fpottier/menhir/-/archive/20211128/archive.tar.gz
+[menhirLib.20211128] downloaded from https://gitlab.inria.fr/fpottier/menhir/-/archive/20211128/archive.tar.gz
+[menhirSdk.20211128] downloaded from https://gitlab.inria.fr/fpottier/menhir/-/archive/20211128/archive.tar.gz
+[ocaml-compiler-libs.v0.12.4] found in cache
+[ocaml-syntax-shims.1.0.0] found in cache
+[ocaml-version.3.4.0] found in cache
+[ocamlbuild.0.14.0] found in cache
+[ocamlfind.1.9.1] found in cache
+[ocp-indent.1.8.1] found in cache
+[odoc-parser.0.9.0] found in cache
+[ppx_derivers.1.2.1] found in cache
+[ppxlib.0.23.0] found in cache
+[re.1.10.3] found in cache
+[result.1.5] found in cache
+[sexplib0.v0.14.0] found in cache
+[stdio.v0.14.0] found in cache
+[stdlib-shims.0.3.0] found in cache
+[topkg.1.0.4] found in cache
+[uchar.0.0.2] found in cache
+[uucp.14.0.0] found in cache
+[uuseg.14.0.0] found in cache
+[uutf.1.0.2] found in cache
+
+<><> Processing actions <><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+-> installed seq.base
+-> installed cmdliner.1.0.4
+-> installed ocamlfind.1.9.1
+-> installed base-bytes.base
+-> installed ocamlbuild.0.14.0
+-> installed uchar.0.0.2
+-> installed topkg.1.0.4
+-> installed dune.2.9.1
+-> installed astring.0.8.5
+-> installed fmt.0.9.0
+-> installed uutf.1.0.2
+-> installed csexp.1.5.1
+-> installed dune-build-info.2.9.1
+-> installed fix.20211125
+-> installed menhirLib.20211128
+-> installed menhirSdk.20211128
+-> installed ocaml-compiler-libs.v0.12.4
+-> installed ocaml-syntax-shims.1.0.0
+-> installed ocaml-version.3.4.0
+-> installed ocp-indent.1.8.1
+-> installed ppx_derivers.1.2.1
+-> installed re.1.10.3
+-> installed result.1.5
+-> installed sexplib0.v0.14.0
+-> installed stdlib-shims.0.3.0
+-> installed fpath.0.7.3
+-> installed uucp.14.0.0
+-> installed menhir.20211128
+-> installed dune-configurator.2.9.1
+-> installed odoc-parser.0.9.0
+-> installed alcotest.1.5.0
+-> installed uuseg.14.0.0
+-> installed base.v0.14.2
+-> installed ppxlib.0.23.0
+-> installed stdio.v0.14.0
+-> installed bisect_ppx.2.7.0
+Done.
+
+<><> ocp-indent.1.8.1 installed successfully ><><><><><><><><><><><><><><><><><>
+=> This package requires additional configuration for use in editors. Install package 'user-setup', or manually:
+
+   * for Emacs, add these lines to ~/.emacs:
+     (add-to-list 'load-path "/home/opam/.opam/4.13/share/emacs/site-lisp")
+     (require 'ocp-indent)
+
+   * for Vim, add this line to ~/.vimrc:
+     set rtp^="/home/opam/.opam/4.13/share/ocp-indent/vim"
+# Run eval $(opam env) to update the current shell environment
+2021-12-03 13:34.30 ---> saved as "0de2d2376bca857062378298d6bdf4d0da46446937bec34c2fc7a2679a16e42f"
+
+/src: (copy (src .) (dst /src/))
+2021-12-03 13:34.36 ---> saved as "71e04dce12b777e43af574ddea673a7ab52d76c85dc84da026d480cf9364d582"
+
+/src: (run (shell "opam exec -- dune build @install @check @runtest && rm -rf _build"))
+      menhir vendor/ocaml-4.13-extended/parser.{ml,mli}
+Grammar has 206 nonterminal symbols, among which 13 start symbols.
+Grammar has 125 terminal symbols.
+Grammar has 855 productions.
+Built an LR(0) automaton with 1864 states.
+The grammar is not SLR(1) -- 140 states have a conflict.
+The construction mode is lalr.
+Built an LR(1) automaton with 1864 states.
+1131 shift/reduce conflicts were silently solved.
+      menhir vendor/ocaml-4.13/parser.{ml,mli}
+Grammar has 206 nonterminal symbols, among which 13 start symbols.
+Grammar has 125 terminal symbols.
+Grammar has 855 productions.
+Built an LR(0) automaton with 1864 states.
+The grammar is not SLR(1) -- 140 states have a conflict.
+The construction mode is lalr.
+Built an LR(1) automaton with 1864 states.
+1131 shift/reduce conflicts were silently solved.
+   test_unit alias vendor/parse-wyc/test/unit/runtest
+Testing `Parse_wyc'.
+This run has ID `E2ESF9K6'.
+
+  [OK]          impl              0   empty.
+  [OK]          impl              1   valid.
+  [OK]          impl              2   invalid after eq.
+  [OK]          impl              3   invalid after in.
+  [OK]          impl              4   invalid seq modules.
+  [OK]          impl              5   not closed module.
+  [OK]          impl              6   not closed module 2.
+  [OK]          impl              7   not closed sig.
+  [OK]          impl              8   not closed begin.
+  [OK]          impl              9   not closed if.
+  [OK]          impl             10   not closed if 2.
+  [OK]          impl             11   invalid if.
+  [OK]          impl             12   invalid if 2.
+  [OK]          impl             13   not closed class.
+  [OK]          impl             14   not closed class 2.
+  [OK]          impl             15   not closed class 3.
+  [OK]          impl             16   not closed class 4.
+  [OK]          impl             17   binop.
+  [OK]          impl             18   unclosed class simpl expr1.
+  [OK]          impl             19   unclosed struct.
+  [OK]          impl             20   many not closed.
+  [OK]          intf              0   empty.
+  [OK]          intf              1   unclosed sig.
+  [OK]          intf              2   not closed sig.
+  [OK]          use_file          0   empty.
+  [OK]          use_file          1   valid.
+  [OK]          use_file          2   invalid after eq.
+  [OK]          use_file          3   invalid after in.
+  [OK]          use_file          4   invalid seq modules.
+  [OK]          use_file          5   not closed module.
+  [OK]          use_file          6   not closed module 2.
+  [OK]          use_file          7   not closed sig.
+  [OK]          use_file          8   not closed begin.
+  [OK]          use_file          9   not closed if.
+  [OK]          use_file         10   not closed if 2.
+  [OK]          use_file         11   invalid if.
+  [OK]          use_file         12   invalid if 2.
+  [OK]          use_file         13   not closed class.
+  [OK]          use_file         14   not closed class 2.
+  [OK]          use_file         15   not closed class 3.
+  [OK]          use_file         16   not closed class 4.
+  [OK]          use_file         17   binop.
+  [OK]          use_file         18   unclosed class simpl expr1.
+  [OK]          use_file         19   unclosed struct.
+  [OK]          use_file         20   many not closed.
+
+Full test results in `/src/_build/default/vendor/parse-wyc/test/unit/_build/_tests/Parse_wyc'.
+Test Successful in 0.008s. 45 tests run.
+   test_unit alias test/unit/runtest
+Testing `ocamlformat'.
+This run has ID `RR72FCVJ'.
+
+  [OK]          Location                               0   compare_width_decr...
+  [OK]          Location                               1   compare_width_decr...
+  [OK]          Location                               2   compare_width_decr...
+  [OK]          Location                               3   compare_width_decr...
+  [OK]          non overlapping interval tree          0   dump: empty.
+  [OK]          non overlapping interval tree          1   dump: singleton.
+  [OK]          non overlapping interval tree          2   dump: disjoint.
+  [OK]          non overlapping interval tree          3   dump: same start.
+  [OK]          non overlapping interval tree          4   dump: same end.
+  [OK]          non overlapping interval tree          5   dump: inclusion.
+  [OK]          non overlapping interval tree          6   roots: empty.
+  [OK]          non overlapping interval tree          7   roots: singleton.
+  [OK]          non overlapping interval tree          8   roots: disjoint.
+  [OK]          non overlapping interval tree          9   roots: inclusion.
+  [OK]          non overlapping interval tree         10   children: empty.
+  [OK]          non overlapping interval tree         11   children: no child...
+  [OK]          non overlapping interval tree         12   children: not pres...
+  [OK]          non overlapping interval tree         13   children: one level.
+  [OK]          non overlapping interval tree         14   children: two levels.
+  [OK]          non overlapping interval tree         15   children: no parti...
+  [OK]          Ast                                    0   !.
+  [OK]          Ast                                    1   ?.
+  [OK]          Ast                                    2   ~.
+  [OK]          Ast                                    3   *.
+  [OK]          Ast                                    4   +.
+  [OK]          Ast                                    5   !=.
+  [OK]          Ast                                    6   land.
+  [OK]          Ast                                    7   lor.
+  [OK]          Ast                                    8   ||.
+  [OK]          Ast                                    9   @.
+  [OK]          Ast                                   10   ::.
+  [OK]          Ast                                   11   :=.
+  [OK]          Ast                                   12   let+.
+  [OK]          Ast                                   13   and+.
+  [OK]          Ast                                   14   .().
+  [OK]          Ast                                   15   .*().
+  [OK]          Ast                                   16   .*(;..).
+  [OK]          Ast                                   17   .[].
+  [OK]          Ast                                   18   .*[].
+  [OK]          Ast                                   19   .*[;..].
+  [OK]          Ast                                   20   .{}.
+  [OK]          Ast                                   21   .*{}.
+  [OK]          Ast                                   22   .*{;..}.
+  [OK]          Ast                                   23   .{}<-.
+  [OK]          Ast                                   24   .*{}<-.
+  [OK]          Ast                                   25   .*{;..}<-.
+  [OK]          Ast                                   26   let.
+  [OK]          Ast                                   27   let+abc.
+  [OK]          Ast                                   28   and.
+  [OK]          Ast                                   29   *.
+  [OK]          Ast                                   30   +.
+  [OK]          Ast                                   31   !=.
+  [OK]          Ast                                   32   land.
+  [OK]          Ast                                   33   lor.
+  [OK]          Ast                                   34   ||.
+  [OK]          Ast                                   35   @.
+  [OK]          Ast                                   36   ::.
+  [OK]          Ast                                   37   :=.
+  [OK]          Ast                                   38   let+.
+  [OK]          Ast                                   39   and+.
+  [OK]          Ast                                   40   let.
+  [OK]          Ast                                   41   let+abc.
+  [OK]          Ast                                   42   and.
+  [OK]          Ast                                   43   .().
+  [OK]          Ast                                   44   .*().
+  [OK]          Ast                                   45   .*(;..).
+  [OK]          Ast                                   46   .[].
+  [OK]          Ast                                   47   .*[].
+  [OK]          Ast                                   48   .*[;..].
+  [OK]          Ast                                   49   .{}.
+  [OK]          Ast                                   50   .*{}.
+  [OK]          Ast                                   51   .*{;..}.
+  [OK]          Ast                                   52   .{}<-.
+  [OK]          Ast                                   53   .*{}<-.
+  [OK]          Ast                                   54   .*{;..}<-.
+  [OK]          Ast                                   55   *.
+  [OK]          Ast                                   56   +.
+  [OK]          Ast                                   57   !=.
+  [OK]          Ast                                   58   land.
+  [OK]          Ast                                   59   lor.
+  [OK]          Ast                                   60   ||.
+  [OK]          Ast                                   61   @.
+  [OK]          Ast                                   62   ::.
+  [OK]          Ast                                   63   :=.
+  [OK]          Ast                                   64   let+.
+  [OK]          Ast                                   65   and+.
+  [OK]          Ast                                   66   .().
+  [OK]          Ast                                   67   .*().
+  [OK]          Ast                                   68   .*(;..).
+  [OK]          Ast                                   69   .[].
+  [OK]          Ast                                   70   .*[].
+  [OK]          Ast                                   71   .*[;..].
+  [OK]          Ast                                   72   .{}.
+  [OK]          Ast                                   73   .*{}.
+  [OK]          Ast                                   74   .*{;..}.
+  [OK]          Ast                                   75   .{}<-.
+  [OK]          Ast                                   76   .*{}<-.
+  [OK]          Ast                                   77   .*{;..}<-.
+  [OK]          Ast                                   78   let.
+  [OK]          Ast                                   79   let+abc.
+  [OK]          Ast                                   80   and.
+  [OK]          Ast                                   81   #.
+  [OK]          Ast                                   82   #.
+  [OK]          Ast                                   83   ##.
+  [OK]          Ast                                   84   #++.
+  [OK]          Ast                                   85   #---#.
+  [OK]          Ast                                   86   let.
+  [OK]          Ast                                   87   let+abc.
+  [OK]          Ast                                   88   and.
+  [OK]          Ast                                   89   *.
+  [OK]          Ast                                   90   +.
+  [OK]          Ast                                   91   !=.
+  [OK]          Ast                                   92   land.
+  [OK]          Ast                                   93   lor.
+  [OK]          Ast                                   94   ||.
+  [OK]          Ast                                   95   @.
+  [OK]          Ast                                   96   ::.
+  [OK]          Ast                                   97   :=.
+  [OK]          Ast                                   98   let+.
+  [OK]          Ast                                   99   and+.
+  [OK]          Ast                                  100   .().
+  [OK]          Ast                                  101   .*().
+  [OK]          Ast                                  102   .*(;..).
+  [OK]          Ast                                  103   .[].
+  [OK]          Ast                                  104   .*[].
+  [OK]          Ast                                  105   .*[;..].
+  [OK]          Ast                                  106   .{}.
+  [OK]          Ast                                  107   .*{}.
+  [OK]          Ast                                  108   .*{;..}.
+  [OK]          Ast                                  109   .{}<-.
+  [OK]          Ast                                  110   .*{}<-.
+  [OK]          Ast                                  111   .*{;..}<-.
+  [OK]          Ast                                  112   let+.
+  [OK]          Ast                                  113   and+.
+  [OK]          Ast                                  114   *.
+  [OK]          Ast                                  115   +.
+  [OK]          Ast                                  116   !=.
+  [OK]          Ast                                  117   let.
+  [OK]          Ast                                  118   let+abc.
+  [OK]          Ast                                  119   and.
+  [OK]          Ast                                  120   and#.
+  [OK]          Ast                                  121   land.
+  [OK]          Ast                                  122   lor.
+  [OK]          Ast                                  123   ||.
+  [OK]          Ast                                  124   @.
+  [OK]          Ast                                  125   ::.
+  [OK]          Ast                                  126   :=.
+  [OK]          Ast                                  127   .().
+  [OK]          Ast                                  128   .*().
+  [OK]          Ast                                  129   .*(;..).
+  [OK]          Ast                                  130   .[].
+  [OK]          Ast                                  131   .*[].
+  [OK]          Ast                                  132   .*[;..].
+  [OK]          Ast                                  133   .{}.
+  [OK]          Ast                                  134   .*{}.
+  [OK]          Ast                                  135   .*{;..}.
+  [OK]          Ast                                  136   .{}<-.
+  [OK]          Ast                                  137   .*{}<-.
+  [OK]          Ast                                  138   .*{;..}<-.
+  [OK]          Indent                                 0   Partial_ast.indent...
+  [OK]          Indent                                 1   Partial_ast.indent...
+  [OK]          Indent                                 2   Partial_ast.indent...
+  [OK]          Indent                                 3   Partial_ast.indent...
+  [OK]          Literal_lexer                          0   string: string: no...
+  [OK]          Literal_lexer                          1   string: simple (pr...
+  [OK]          Literal_lexer                          2   string: simple (no...
+  [OK]          Literal_lexer                          3   string: numeric es...
+  [OK]          Literal_lexer                          4   string: numeric es...
+  [OK]          Literal_lexer                          5   string: raw tab (p...
+  [OK]          Literal_lexer                          6   string: raw tab (n...
+  [OK]          Literal_lexer                          7   string: backslash ...
+  [OK]          Literal_lexer                          8   string: backslash ...
+  [OK]          Literal_lexer                          9   string: backslash ...
+  [OK]          Literal_lexer                         10   string: backslash ...
+  [OK]          Literal_lexer                         11   char: not a charac...
+  [OK]          Literal_lexer                         12   char: escaped newl...
+  [OK]          Literal_lexer                         13   char: letter.
+  [OK]          Literal_lexer                         14   char: escaped back...
+  [OK]          Literal_lexer                         15   char: escaped sing...
+  [OK]          Literal_lexer                         16   char: escaped doub...
+  [OK]          Literal_lexer                         17   char: backslash n.
+  [OK]          Literal_lexer                         18   char: backslash t.
+  [OK]          Literal_lexer                         19   char: backslash b.
+  [OK]          Literal_lexer                         20   char: backslash r.
+  [OK]          Literal_lexer                         21   char: backslash sp...
+  [OK]          Literal_lexer                         22   char: decimal escape.
+  [OK]          Literal_lexer                         23   char: octal escape.
+  [OK]          Literal_lexer                         24   char: hex escape.
+  [OK]          Fmt                                    0   lazy_: not using l...
+  [OK]          Fmt                                    1   lazy_: using lazy.
+  [OK]          Fmt                                    2   list_pn: evaluatio...
+  [OK]          Fmt                                    3   list_pn: does not ...
+  [OK]          Fmt                                    4   list_k: evaluation...
+  [OK]          Fmt                                    5   list_k: does not c...
+  [OK]          Fmt                                    6   sequence: 1 element.
+  [OK]          Fmt                                    7   sequence: empty list.
+  [OK]          Fmt                                    8   sequence: list.
+  [OK]          Fmt                                    9   sequence: long list.
+  [OK]          Translation_unit                       0   parse_and_format s...
+  [OK]          Translation_unit                       1   parse_and_format u...
+  [OK]          Translation_unit                       2   parse_and_format c...
+  [OK]          Translation_unit                       3   parse_and_format c...
+  [OK]          Translation_unit                       4   parse_and_format c...
+  [OK]          Translation_unit                       5   parse_and_format c...
+  [OK]          Translation_unit                       6   parse_and_format c...
+  [OK]          Translation_unit                       7   parse_and_format m...
+  [OK]          Translation_unit                       8   parse_and_format m...
+  [OK]          Translation_unit                       9   parse_and_format m...
+  [OK]          Translation_unit                      10   parse_and_format m...
+  [OK]          Translation_unit                      11   parse_and_format e...
+  [OK]          Translation_unit                      12   numeric: invalid low.
+  [OK]          Translation_unit                      13   numeric: invalid h...
+  [OK]          Translation_unit                      14   numeric: invalid r...
+  [OK]          Translation_unit                      15   numeric: empty buf...
+  [OK]          Translation_unit                      16   numeric: last buff...
+  [OK]          Translation_unit                      17   numeric: already f...
+  [OK]          Translation_unit                      18   numeric: not alrea...
+  [OK]          Translation_unit                      19   numeric: with pare...
+  [OK]          Translation_unit                      20   numeric: split ove...
+  [OK]          Translation_unit                      21   numeric: invalid f...
+  [OK]          Translation_unit                      22   numeric: already f...
+  [OK]          Translation_unit                      23   numeric: partial let.
+  [OK]          Translation_unit                      24   numeric: fit on 1 ...
+  [OK]          Translation_unit                      25   numeric (file): pa...
+  [OK]          Translation_unit                      26   numeric (file): pa...
+  [OK]          Translation_unit                      27   numeric (file): fo...
+  [OK]          Translation_unit                      28   numeric (file): fo...
+
+Full test results in `/src/_build/default/test/unit/_build/_tests/ocamlformat'.
+Test Successful in 0.599s. 227 tests run.
+2021-12-03 13:35.28 ---> saved as "3025fa71624e6cb4c869aeeb16a75cd1bdf80f89219e53d6e5bbf0a6681b3d5b"
+Job succeeded
+2021-12-03 13:35.28: Job succeeded
