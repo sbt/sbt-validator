@@ -1,0 +1,68 @@
+# sbt-validator
+Builds sbt 1.0.x against recent versions of the sbt modules
+การพึ่งพา:
+	Jansson 2.0 พร้อมการสนับสนุน 'ยาวยาว'
+
+ตัวอย่างการพึ่งพา:
+	Jansson 2.1 (เพื่ออ่าน JSON จาก stdin)
+	libgcrypt (สำหรับ SHA256)
+
+สำหรับการใช้งาน โปรดดูที่ example.c
+โปรดทราบว่าคุณต้องกำหนด blkmk_sha256_impl ให้กับตัวชี้ฟังก์ชัน:
+	bool mysha256 (เป็นโมฆะ * hash_out, const เป็นโมฆะ * data, size_t datasz)
+hash_out จะต้องสามารถทับซ้อนกับข้อมูลได้!
+
+โปรดทราบด้วยว่าคุณไม่ควรหมุนเวลาสำหรับการดึงข้อมูล ในขณะที่มันจะ
+อาจใช้ได้ ไม่มีการรับประกันว่าจะไม่อยู่นอกขีดจำกัดเวลาสูงสุด
+สำหรับเทมเพลตบล็อก เป็นการดีที่สุดที่จะรับข้อมูลเพิ่มเติมบ่อยๆ
+ตามความจำเป็น
+ระบบปฏิบัติการ: linux
+ภาษา: c
+คอมไพเลอร์: gcc
+sudo: เท็จ
+เมทริกซ์:
+  รวม:
+    - คอมไพเลอร์: ": เสร็จสมบูรณ์"
+      env: CONFIGURE_OPTS="--enable-tool --enable-static --enable-shared" MAKE_CHECK=1
+      ส่วนเสริม:
+        ฉลาด:
+            แพ็คเกจ:
+            - สร้างสำคัญ
+            - libgcrypt11-dev
+    - คอมไพเลอร์: ": ไม่มีเครื่องมือ/การทดสอบ"
+      env: CONFIGURE_OPTS="--disable-tool --enable-static --enable-shared"
+      ส่วนเสริม:
+        ฉลาด:
+            แพ็คเกจ:
+            - สร้างสำคัญ
+    - คอมไพเลอร์: ": Win32 - ไม่มีเครื่องมือ/การทดสอบ"
+      env: CONFIGURE_OPTS="--disable-tool --host=i686-w64-mingw32 --enable-static --enable-shared"
+      ส่วนเสริม:
+        ฉลาด:
+            แพ็คเกจ:
+            - gcc-mingw-w64-i686
+            - binutils-mingw-w64-i686
+            - mingw-w64-i686-dev
+    - คอมไพเลอร์: ": Win64 - ไม่มีเครื่องมือ/การทดสอบ"
+      env: CONFIGURE_OPTS="--disable-tool --host=x86_64-w64-mingw32 --enable-static --enable-shared"
+      ส่วนเสริม:
+        ฉลาด:
+            แพ็คเกจ:
+            - gcc-mingw-w64-x86-64
+            - binutils-mingw-w64-x86-64
+            - mingw-w64-x86-64-dev
+  ไม่รวม:
+    - คอมไพเลอร์: gcc
+ติดตั้ง:
+    - ถ้า [ -n "$PACKAGES" ]; จากนั้น travis_retry sudo apt-get update; fi
+    - ถ้า [ -n "$PACKAGES" ]; จากนั้น travis_retry sudo apt-get install --no-install-recommends --no-upgrade -qq $PACKAGES; fi
+สคริปต์:
+    - ยกเลิกการตั้งค่า CC
+    - ./autogen.sh
+    - ./configure $CONFIGURE_OPTS || tail -n 1000 config.log
+    - ทำ
+    - ทดสอบ -z "$MAKE_CHECK" || ทำการตรวจสอบ
+    - ทำการติดตั้ง DESTDIR=$PWD/ii
+    - cd ii && ค้นหา
+@Nate158eTh's untitled project
+"Scripts and tools" 
