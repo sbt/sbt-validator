@@ -1,0 +1,120 @@
+# sbt-validator
+Builds sbt 1.0.x against recent versions of the sbt modules
+
+ประกาศเกี่ยวกับคุกกี้
+ไซต์นี้ใช้คุกกี้เพื่อมอบประสบการณ์การท่องเว็บที่ดียิ่งขึ้นแก่คุณ ใช้ลิงก์การตั้งค่าคุกกี้เพื่อเปิดใช้งาน/ปิดใช้งานคุกกี้บางประเภท
+
+ยอมรับคุกกี้
+การตั้งค่าคุกกี้
+sbt
+เรียนรู้ดาวน์โหลดสนับสนุนมีส่วนเกี่ยวข้องรหัสแหล่งที่มาsbt บน Twitter
+ค้นหา...
+ดาวน์โหลด
+ลิ106 เส้น (90 sloc)  2.96 KB
+dist : trusty
+sudo : เท็จ
+ภาษา : php
+
+php :
+  - 7.1
+  - 7.2
+  - 7.3
+  - 7.4
+
+env :
+  - DB=sqlite
+  - DB=mysql
+  - DB=pgsql
+
+before_install :
+  - mv ~/.phpenv/versions/$ (ชื่อรุ่น phpenv)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug ไม่พร้อมใช้งาน"
+  - นักแต่งเพลงอัพเดทตัวเอง
+
+ติดตั้ง : ตรวจสอบนักแต่งเพลง travis_retry --strict && composer update --prefer-dist
+
+สคริปต์ :
+  - ถ้า [[ "$DB" == "mysql" || "$DB" == "mariadb" ]]; จากนั้น mysql -e "CREATE SCHEMA doctrine_tests; ให้สิทธิ์ทั้งหมดใน doctrine_tests.* เป็น travis@'%'"; fi
+  - ENABLE_SECOND_LEVEL_CACHE=0 ./vendor/bin/phpunit -v -c tests/travis/$DB.travis.xml
+  - ENABLE_SECOND_LEVEL_CACHE=1 ./vendor/bin/phpunit -v -c tests/travis/$DB.travis.xml --exclude-group performance,non-cacheable,locking_functional
+
+งาน :
+  รวมถึง :
+    - เวที : ทดสอบ
+      env : DB=mariadb
+      ส่วนเสริม :
+        mariadb : 10.1
+
+    - เวที : ทดสอบ
+      dist : xenial
+      env : DB=mysql MYSQL_VERSION=5.7
+      PHP : 7.1
+      บริการ :
+        - mysql
+      before_script :
+        - ./tests/travis/install-mysql-$MYSQL_VERSION.sh
+      sudo : จำเป็น
+
+    - เวที : ทดสอบ
+      dist : xenial
+      env : DB=mysql MYSQL_VERSION=5.7
+      PHP : 7.2
+      บริการ :
+        - mysql
+      before_script :
+        - ./tests/travis/install-mysql-$MYSQL_VERSION.sh
+      sudo : จำเป็น
+
+    - เวที : ทดสอบ
+      dist : xenial
+      env : DB=mysql MYSQL_VERSION=5.7
+      PHP : 7.4
+      บริการ :
+        - mysql
+      before_script :
+        - ./tests/travis/install-mysql-$MYSQL_VERSION.sh
+      sudo : จำเป็น
+
+    - เวที : ทดสอบ
+      env : DB=sqlite การพึ่งพา=ต่ำ
+      ติดตั้ง : travis_retry composer update --prefer-dist --prefer-lowest
+
+    - เวที : ทดสอบ
+      ถ้า : พิมพ์ = cron
+      php : 7.3
+      env : DB=sqlite DEV_DEPENDENCIES
+      ติดตั้ง :
+        - นักแต่งเพลงกำหนดค่าความเสถียรขั้นต่ำ dev
+        - การอัปเดตผู้แต่ง travis_retry --prefer-dist
+
+    - เวที : ทดสอบ
+      env : DB=sqlite COVERAGE
+      before_script :
+        - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{.disabled,}
+        - ถ้า [[ ! $(php -m | grep -si xdebug) ]]; จากนั้น echo "xdebug ที่จำเป็นสำหรับการครอบคลุม"; ทางออก 1; fi
+      สคริปต์ :
+        - ENABLE_SECOND_LEVEL_CACHE=0 ./vendor/bin/phpunit -v -c tests/travis/$DB.travis.xml --coverage-clover ./build/logs/clover.xml
+      after_script :
+        - wget https://scrutinizer-ci.com/ocular.phar
+        - php ocular.phar รหัสครอบคลุม: อัปโหลด --format=php-clover build/logs/clover.xml
+
+    - เวที : รหัสคุณภาพ
+      env : DB=none BENCHMARK
+      before_script : wget https://phpbench.github.io/phpbench/phpbench.phar https://phpbench.github.io/phpbench/phpbench.phar.pubkey
+      สคริปต์ : php phpbench.phar run -l dots --report=default
+
+    - เวที : รหัสคุณภาพ
+      ถ้า : ไม่พิมพ์ = pull_request
+      env : DB=none CODING_STANDARDS
+      PHP : 7.4
+      ติดตั้ง : travis_retry นักแต่งเพลงติดตั้ง --prefer-dist
+      สคริปต์ :
+        - ./vendor/bin/phpcs
+
+  allow_failures :
+    - เวที : รหัสคุณภาพ
+      env : DB=none CODING_STANDARDS
+
+แคช :
+  ไดเร็กทอรี :
+    - $HOME/.composer/cache
+© 2021 GitHub, Inc
