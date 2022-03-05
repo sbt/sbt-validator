@@ -1,0 +1,35 @@
+# sbt-validator
+Builds sbt 1.0.x against recent versions of the sbt modules
+แนะนำบรรทัดคำสั่ง
+คุณยังสามารถอัปโหลดไฟล์ที่มีอยู่จากคอมพิวเตอร์ของคุณโดยใช้คำแนะนำด้านล่าง
+
+
+Git global setup
+git config --global user.name "WatcharinNate"
+git config --global user.email "watcharin92157@outlook.com"
+
+สร้างที่เก็บใหม่
+โคลน git https://gitlab.com/WatcharinNate/Nate158l.e.git
+cd Nate158l.e
+git switch -c main
+แตะ README.md
+git เพิ่ม README.md
+git commit -m "เพิ่ม README"
+git push -u ต้นทางหลัก
+
+ดันโฟลเดอร์ที่มีอยู่
+cd ที่มีอยู่_folder
+git init --initial-branch=main
+git รีโมทเพิ่มต้นทางhttps://gitlab.com/WatcharinNate/Nate158l.e.git
+git เพิ่ม
+git commit -m "การคอมมิทเริ่มต้น"
+git push -u ต้นทางหลัก
+
+พุชที่เก็บ Git ที่มีอยู่
+cd ที่มีอยู่_repo
+git รีโมตเปลี่ยนชื่อ Origin old-origin
+git รีโมทเพิ่มต้นทางhttps://gitlab.com/WatcharinNate/Nate158l.e.git 
+git push -u origin --all
+git push -u origin --tags
+https://gitlab.com/WatcharinNate/Nate158l.e.gitopensource.guide/opensource.guideopensource.guide/opensource.guide
+
